@@ -1,6 +1,7 @@
 package com.example.myapplication
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.ContentValues.TAG
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -20,7 +21,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import kotlin.concurrent.thread
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : Activity() {
     //懒加载注入databinding
     private val mBinding : ActivityMainBinding by lazy { ActivityMainBinding.inflate(layoutInflater) }
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,12 +29,10 @@ class MainActivity : AppCompatActivity() {
         setContentView(mBinding.root)
     }
 
+}
 
-
-
-
-
-    //下面是使用okp进行的网络请求（retrofit不熟练的时候使用的）
+//TODO:下面是之前用okp进行的网络请求
+//下面是使用okp进行的网络请求（retrofit不熟练的时候使用的）
 //    @SuppressLint("SuspiciousIndentation")
 //    private fun sendRequest() {
 //        thread {
@@ -64,9 +63,6 @@ class MainActivity : AppCompatActivity() {
 //
 //        }
 //    }
-
-
-}
 
 
 
