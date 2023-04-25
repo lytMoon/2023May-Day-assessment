@@ -26,44 +26,11 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(mBinding.root)
-        onClick()
     }
 
-    private fun onClick() {
-        mBinding.btn.setOnClickListener {
-            sendRequest()
-        }
-    }
 
-    // TODO: 下面用retrofit来进行网络请求
-    private fun sendRequest() {
-        val retrofit =Retrofit.Builder()
-            .baseUrl("https://wanandroid.com/")
-            .addConverterFactory(GsonConverterFactory.create())//指明解析数据时进行的转换库
-            .build()
-        val apiService= retrofit.create(ApiService::class.java)
-        apiService.getwxarticle().enqueue(object:Callback<UserList<UserData>>{
-            override fun onResponse(
-                call: Call<UserList<UserData>>,
-                response: Response<UserList<UserData>>
-            ) {
-              val list = response.body()?.data//得到list对象，自己解析为一个对象可以使用it来遍历
-                if (list!=null){
-                    for (it in list){
-                        //这里进行最终的日志打印
-                        Log.d("999","(MainActivity.kt:54)-->> "+it.name);
 
-                    }
-                }
-            }
 
-            override fun onFailure(call: Call<UserList<UserData>>, t: Throwable) {
-                TODO("Not yet implemented")
-            }
-
-        })
-
-    }
 
 
     //下面是使用okp进行的网络请求（retrofit不熟练的时候使用的）
