@@ -1,68 +1,68 @@
 package com.example.myapplication
 
-import android.annotation.SuppressLint
-import android.app.Activity
-import android.content.ContentValues.TAG
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import com.example.myapplication.api.ApiService
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.viewpager2.widget.ViewPager2
+import com.example.myapplication.adapter.ViewPager2Adapter
 import com.example.myapplication.databinding.ActivityMainBinding
-import com.example.myapplication.myData.UserData
-import com.example.myapplication.myData.UserList
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import kotlin.concurrent.thread
+import com.example.myapplication.fragment.HomeFragment
+import com.example.myapplication.fragment.PlayGroundFragment
+import com.example.myapplication.fragment.UserFragment
 
-class MainActivity : Activity() {
+class MainActivity : AppCompatActivity() {
+    //设置fragment集合，用于vp2进行页面跳转绑定
+    val fragmentList: MutableList<Fragment> = ArrayList()
     //懒加载注入databinding
     private val mBinding : ActivityMainBinding by lazy { ActivityMainBinding.inflate(layoutInflater) }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(mBinding.root)
+        //      下面进行fragment和viewpager的绑定
+        //去除自带的选中颜色,去除后文字和图片选择效果就是跟我们自定义的效果一样
+        mBinding.navView.itemIconTintList = null
+
+        fragmentList.add(HomeFragment())
+        fragmentList.add(PlayGroundFragment())
+        fragmentList.add(UserFragment())//添加3个fragment
+        mBinding.viewPager2.adapter = ViewPager2Adapter(this, fragmentList)
+        //当viewpage2页面切换时nav导航图标也跟着切换
+        mBinding.viewPager2.registerOnPageChangeCallback(object :
+            ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                mBinding.navView.menu.getItem(position).isChecked = true
+            }
+        })
+
+//当nav导航点击切换时，viewpager2也跟着切换页面
+        //mBinding 顺便调用了viewpager2
+        mBinding.navView.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.bottom_nav_home -> {
+                    mBinding.viewPager2.currentItem = 0
+                    return@setOnItemSelectedListener true
+                }
+                R.id.bottom_nav_playground -> {
+                    mBinding.viewPager2.currentItem = 1
+                    return@setOnItemSelectedListener true
+                }
+                R.id.bottom_nav_user -> {
+                    mBinding.viewPager2.currentItem = 2
+                    return@setOnItemSelectedListener true
+                }
+
+            }
+            false
+        }
     }
+
+
+
 
 }
 
-//TODO:下面是之前用okp进行的网络请求
-//下面是使用okp进行的网络请求（retrofit不熟练的时候使用的）
-//    @SuppressLint("SuspiciousIndentation")
-//    private fun sendRequest() {
-//        thread {
-//            try {
-//            val client = OkHttpClient()
-//            val request = Request.Builder()
-//                .url("https://wanandroid.com/wxarticle/chapters/json")
-//                .get()
-//                .build()
-//            val response =client.newCall(request).execute()
-//            val responseData = response.body()?.string()
-//                Log.d("666","(MainActivity.kt:40)-->> "+responseData);
-//            if (responseData!=null){
-//                parseJSONWithGSON(responseData)
-//            } }catch (e:Exception){
-//                e.printStackTrace()
-//            }
-//        }
-//    }
-//
-//    private fun parseJSONWithGSON(jsonData: String) {
-//        val gson = Gson()
-//        val typeOf =object : TypeToken<UserList<UserData>>(){}.type//设置数据需要解析成的类型
-//        val myList = gson.fromJson<UserList<UserData>>(jsonData,typeOf)
-//        val myfinalList= myList.data
-//        for (it in myfinalList){
-//            Log.d("888","(MainActivity.kt:57)-->> "+it.name);
-//
-//        }
-//    }
+
 
 
 

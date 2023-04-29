@@ -2,11 +2,13 @@ package com.example.myapplication.adapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.example.myapplication.MainActivity
+
 /**
  * description ：
  * author : lytMoon
  * email : yytds@foxmail.com
- * date : 2023/4/25
+ * date : 2023/4/27
  * version: 1.0
  */
 

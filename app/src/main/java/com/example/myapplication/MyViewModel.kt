@@ -2,6 +2,8 @@ package com.example.myapplication
 
 import android.annotation.SuppressLint
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.myapplication.api.ApiService
 import com.example.myapplication.myData.UserData
@@ -21,8 +23,11 @@ import retrofit2.converter.gson.GsonConverterFactory
  */
 class MyViewModel : ViewModel() {
     // TODO: 下面进行user的网络请求。微信公众号。
+    private val _userData:MutableLiveData<List<UserData>> = MutableLiveData()
+    val userData: LiveData<List<UserData>>
+        get() = _userData//userData只是可被外界观察到的
 
-    private fun UserSendRequest() {
+     fun UserSendRequest() {
         val retrofit = Retrofit.Builder()
             .baseUrl("https://wanandroid.com/")
             .addConverterFactory(GsonConverterFactory.create())//指明解析数据时进行的转换库
@@ -34,18 +39,20 @@ class MyViewModel : ViewModel() {
                 call: Call<UserList<UserData>>,
                 response: Response<UserList<UserData>>
             ) {
-                val list = response.body()?.data//得到list对象，自己解析为一个对象可以使用it来遍历
-                if (list!=null){
-                    for (it in list){
-                        //这里进行最终的日志打印
-                        Log.d("999","(MainActivity.kt:54)-->> "+it.name);
-
-                    }
-                }
+                _userData.postValue(response.body()?.data!!)
+                Log.d("999","(MyViewModel.kt:43)-->> "+_userData.toString());
+//                val list = response.body()?.data//得到list对象，自己解析为一个对象可以使用it来遍历
+//                if (list!=null){
+//                    for (it in list){
+//                        //这里进行最终的日志打印
+//                        Log.d("999","(MainActivity.kt:54)-->> "+it.name);
+//
+//                    }
+//                }
             }
 
             override fun onFailure(call: Call<UserList<UserData>>, t: Throwable) {
-                TODO("Not yet implemented")
+                Log.d("1000","网络请求失败了"+t.message);
             }
 
         })
