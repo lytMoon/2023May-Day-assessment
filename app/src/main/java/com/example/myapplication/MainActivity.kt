@@ -6,17 +6,23 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import com.example.myapplication.databinding.ActivityMainBinding
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
+    //懒加载注入viewmodel
+    private val myViewModel by lazy {
+        ViewModelProvider(this).get(MyViewModel::class.java)
+    }
     //懒加载注入databinding
     private val mBinding: ActivityMainBinding by lazy { ActivityMainBinding.inflate(layoutInflater) }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(mBinding.root)
+        myViewModel.rnTopStorySendQuest()
         setSupportActionBar(mBinding.toolBar)
         val currentDate = Date()//获取时间
         val dateFormat = SimpleDateFormat("yyyy/MM", Locale.getDefault())
