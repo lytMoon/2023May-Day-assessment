@@ -8,7 +8,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
-import com.example.myapplication.adapter.NewsAdapter
+import com.example.myapplication.topNewsAdapter.NewsAdapter
 import com.example.myapplication.databinding.ActivityMainBinding
 import java.text.SimpleDateFormat
 import java.util.Date

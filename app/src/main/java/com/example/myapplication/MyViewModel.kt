@@ -18,7 +18,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.lang.ref.WeakReference
 
 /**
- * description ：
+ * description ：主要负责网络请求，把数据传入livedata，livedata可被外界观察到
  * author : lytMoon
  * email : yytds@foxmail.com
  * date : 2023/4/29 16:47

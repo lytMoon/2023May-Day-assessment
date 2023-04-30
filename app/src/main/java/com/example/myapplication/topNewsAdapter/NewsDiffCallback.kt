@@ -1,4 +1,4 @@
-package com.example.myapplication.adapter
+package com.example.myapplication.topNewsAdapter
 
 import androidx.recyclerview.widget.DiffUtil
 import com.example.myapplication.myData.TopStory

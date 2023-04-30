@@ -27,7 +27,7 @@ class newsReadingActivity : AppCompatActivity() {
         }
         mBinding.btnReturn.setOnClickListener{
             Toast.makeText(this, "返回", Toast.LENGTH_SHORT).show()
-            finish()
+            finish()//结束当前的activity
         }
         mBinding.commentButton.setOnClickListener {
             Toast.makeText(this, "查看评论", Toast.LENGTH_SHORT).show()
