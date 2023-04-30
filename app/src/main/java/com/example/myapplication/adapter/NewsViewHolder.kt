@@ -19,9 +19,11 @@ import com.example.myapplication.myData.TopStory
  */
 class NewsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
      val titleView: TextView  = itemView.findViewById(R.id.titleView)
+     val tvName :TextView  = itemView.findViewById(R.id.tv_name)
      val imageView: ImageView = itemView.findViewById(R.id.imageView)
 
     fun bind(news: TopStory) {
+        tvName.text=news.hint
         titleView.text = news.title
         Glide.with(itemView.context).load(news.image).into(imageView)
 

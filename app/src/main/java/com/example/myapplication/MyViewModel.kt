@@ -48,11 +48,7 @@ class MyViewModel:androidx.lifecycle.ViewModel() {
                 Log.d("1000","网络请求失败了"+t.message);
             }
         })
-
-
-
     }
-
 }
 
 
