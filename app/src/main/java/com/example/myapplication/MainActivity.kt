@@ -17,7 +17,6 @@ import java.util.Locale
 class MainActivity : AppCompatActivity() {
 
 
-    val imageUrlList = mutableListOf<String>()
 
     //懒加载注入viewmodel
     private val myViewModel by lazy {
@@ -36,9 +35,22 @@ class MainActivity : AppCompatActivity() {
             adapter.submitList(news)
         }
         viewPager.adapter = adapter
+        /**
+         下面是设置了轮播的时间间隔：3000ms（3秒）
+         原理：
+         */
+        viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+            }
+        })
+
+        viewPager.postDelayed({
+            viewPager.currentItem = (viewPager.currentItem + 1) % adapter.itemCount
+        }, 3000)
+
+//      TODO:可以对时间进行一个选择，时间不同的时候，title设置为不同的值
         setSupportActionBar(mBinding.toolBar)
-
-
         val currentDate = Date()//获取时间
         val dateFormat = SimpleDateFormat("M月dd日", Locale.getDefault())
         val dateString = dateFormat.format(currentDate)

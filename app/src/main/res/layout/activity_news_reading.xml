@@ -1,4 +1,7 @@
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -6,26 +9,28 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        tools:context=".newsReadingActivity">
 
         <WebView
-            android:id="@+id/webView"
+            android:id="@+id/my_webView"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
         <LinearLayout
             android:id="@+id/bottomLayout"
+            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="80dp"
             android:layout_alignParentBottom="true"
             android:background="@color/white"
-            android:orientation="horizontal"
             android:padding="16dp">
 
             <ImageButton
                 android:id="@+id/btn_return"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/btn_return"
                 android:contentDescription="返回" />
@@ -34,6 +39,7 @@
                 android:id="@+id/commentButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/ic_comment"
                 android:contentDescription="评论" />
@@ -43,6 +49,7 @@
                 android:id="@+id/favoriteButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/ic_favorite"
                 android:contentDescription="收藏" />
@@ -51,6 +58,7 @@
                 android:id="@+id/shareButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/ic_share"
                 android:contentDescription="分享" />

@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.myapplication.R
 import com.example.myapplication.myData.TopStory
+import com.example.myapplication.newsReadingActivity
 
 /**
  * description ：
@@ -28,11 +29,12 @@ class NewsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         Glide.with(itemView.context).load(news.image).into(imageView)
 
 
-//        itemView.setOnClickListener {
-//            val intent = Intent(itemView.context, NewsDetailActivity::class.java)
-//            intent.putExtra("url", news.url)
-//            itemView.context.startActivity(intent)
-//        }
+        itemView.setOnClickListener {
+            val intent = Intent(itemView.context, newsReadingActivity::class.java)
+            //设置标志符
+            intent.putExtra("topNewsUrl", news.url)
+            itemView.context.startActivity(intent)
+        }
     }
 }
 
