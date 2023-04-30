@@ -1,10 +1,13 @@
 package com.example.myapplication.api
 
+import com.example.myapplication.myData.BeforeNewsData
+import com.example.myapplication.myData.BeforeStory
 import com.example.myapplication.myData.RecentNewsData
 import com.example.myapplication.myData.Story
 import com.example.myapplication.myData.TopStory
 import retrofit2.Call
 import retrofit2.http.GET
+import retrofit2.http.Path
 
 /**
  * description ：这是一个为retrofit提供服务的apiService
@@ -29,9 +32,10 @@ interface ApiService {
 
     /**
      * 下面进行更早的新闻消息的网络请求
+     * https://news-at.zhihu.com/api/4/news/before/20230425
      */
-//    @GET("api/4/news/latest")
-//    fun getBeforeNews(): Call<RecentNewsData<TopStory>>
+    @GET("api/4/news/before/{time}")
+    fun getBeforeNews(@Path("time")time:String): Call<BeforeNewsData<BeforeStory>>
 
 
 

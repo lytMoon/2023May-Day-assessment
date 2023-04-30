@@ -1,5 +1,6 @@
 package com.example.myapplication
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -28,9 +29,28 @@ class MainActivity : AppCompatActivity() {
 
     //懒加载注入databinding
     private val mBinding: ActivityMainBinding by lazy { ActivityMainBinding.inflate(layoutInflater) }
+    @SuppressLint("ResourceAsColor")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(mBinding.root)
+
+        /**
+         * 下面是向上刷新
+         */
+
+        mBinding.swipeRefresh.setColorSchemeColors(R.color.black)//设置进度条颜色
+        mBinding.swipeRefresh.setOnRefreshListener {
+            myViewModel.rnTopStorySendQuest()
+            val viewPager:ViewPager2 = mBinding.bannerViewPager
+            val adapter = NewsAdapter()
+            myViewModel.newsTopData.observe(this) { news ->
+                adapter.submitList(news)
+                viewPager.adapter = adapter
+            }
+            mBinding.swipeRefresh.isRefreshing = false
+
+        }
+
         /**
          * 下面是rnTopStorySendQuest()，用于轮播图
          */
@@ -42,6 +62,11 @@ class MainActivity : AppCompatActivity() {
         }
         viewPager.adapter = adapter
 
+
+        /**
+         *下面是对过往消息初始化
+         */
+        myViewModel.rvBeforeStoryQuest("20230425")
 
         /**
          * 下面是rnRecentStoryQuest，用于展示recyclerview
