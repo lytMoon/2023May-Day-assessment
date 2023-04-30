@@ -15,22 +15,26 @@
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolBar"
+            app:title="默认"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/design_default_color_background"
-            app:title="默认"
             app:titleTextColor="@color/black"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+
         <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/banner_view_pager"
+                android:id="@+id/banner_view_pager"
+                android:layout_width="match_parent"
+                android:background="@color/white"
+                android:layout_height="400dp" />
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
             android:layout_width="match_parent"
-            android:layout_height="400dp" />
-
-
-
-
-
-
+            android:layout_height="match_parent"
+            android:scrollbars="vertical"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
     </LinearLayout>
 </layout>

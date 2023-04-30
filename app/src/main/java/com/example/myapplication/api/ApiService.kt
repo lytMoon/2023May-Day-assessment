@@ -22,16 +22,16 @@ interface ApiService {
     fun getRecentTopNews(): Call<RecentNewsData<TopStory>>
 
     /**
-    下面是初始化新闻消息，用于我们的轮播图
+    下面是进行最新消息的请求
      */
     @GET("api/4/news/latest")
-    fun getNews(): Call<RecentNewsData<Story>>
+    fun getRecentNews(): Call<RecentNewsData<Story>>
 
     /**
      * 下面进行更早的新闻消息的网络请求
      */
-    @GET("api/4/news/latest")
-    fun getBeforeNews(): Call<RecentNewsData<TopStory>>
+//    @GET("api/4/news/latest")
+//    fun getBeforeNews(): Call<RecentNewsData<TopStory>>
 
 
 

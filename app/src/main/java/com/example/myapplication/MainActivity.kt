@@ -7,9 +7,12 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.example.myapplication.topNewsAdapter.NewsAdapter
 import com.example.myapplication.databinding.ActivityMainBinding
+import com.example.myapplication.newsAdapter.RvNewsAdapter
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -28,6 +31,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(mBinding.root)
+        /**
+         * 下面是rnTopStorySendQuest()，用于轮播图
+         */
         myViewModel.rnTopStorySendQuest()
         val viewPager:ViewPager2 = mBinding.bannerViewPager
         val adapter = NewsAdapter()
@@ -35,6 +41,24 @@ class MainActivity : AppCompatActivity() {
             adapter.submitList(news)
         }
         viewPager.adapter = adapter
+
+
+        /**
+         * 下面是rnRecentStoryQuest，用于展示recyclerview
+         */
+        myViewModel.rnRecentStoryQuest()
+
+        val rv_viewPager:RecyclerView = mBinding.recyclerView
+        mBinding.recyclerView.layoutManager = LinearLayoutManager(this)
+        val rv_adapter =RvNewsAdapter()
+        myViewModel.newsRecentData.observe(this) { it ->
+            rv_adapter.submitList(it)
+        }
+        rv_viewPager.adapter=rv_adapter
+
+
+
+
         /**
          下面是设置了轮播的时间间隔：3000ms（3秒）
          原理：
