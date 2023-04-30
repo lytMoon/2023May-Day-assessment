@@ -1,5 +1,6 @@
 package com.example.myapplication
 
+import android.util.Log
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
 
@@ -15,10 +16,19 @@ import org.junit.Assert.*
  */
 @RunWith(AndroidJUnit4::class)
 class ExampleInstrumentedTest {
+
+    var number:Int = 0
+
     @Test
     fun useAppContext() {
+        test()
+        Log.d("TAG","(ExampleInstrumentedTest.kt:24)-->> "+number);
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
         assertEquals("com.example.myapplication", appContext.packageName)
+    }
+
+    private fun test() {
+        number=1
     }
 }

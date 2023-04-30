@@ -1,9 +1,12 @@
 package com.example.myapplication
 
 import android.annotation.SuppressLint
+import android.os.Handler
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
+import androidx.lifecycle.Transformations
 import com.example.myapplication.api.ApiService
 import com.example.myapplication.myData.RecentNewsData
 import com.example.myapplication.myData.TopStory
@@ -12,6 +15,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.lang.ref.WeakReference
 
 /**
  * description ：
@@ -22,10 +26,9 @@ import retrofit2.converter.gson.GsonConverterFactory
  */
 class MyViewModel:androidx.lifecycle.ViewModel() {
     // 下面进行网络请求
-    private val _userData: MutableLiveData<List<TopStory>> = MutableLiveData()
-    val userData: LiveData<List<TopStory>>
-        get() = _userData//userData只是可被外界观察到的
-
+    private val _newsTopData: MutableLiveData<List<TopStory>> = MutableLiveData()
+    val newsTopData: LiveData<List<TopStory>>
+        get() = _newsTopData//
     fun rnTopStorySendQuest() {
         val retrofit = Retrofit.Builder()
             .baseUrl("https://news-at.zhihu.com/")
@@ -38,22 +41,18 @@ class MyViewModel:androidx.lifecycle.ViewModel() {
                 call: Call<RecentNewsData<TopStory>>,
                 response: Response<RecentNewsData<TopStory>>
             ) {
-                _userData.postValue(response.body()?.top_stories!!)
-                Log.d("999","(MyViewModel.kt:43)-->> "+_userData.toString());
-                val list = response.body()?.top_stories//得到list对象，自己解析为一个对象可以使用it来遍历
-                if (list!=null){
-                    for (it in list){
-                        //这里进行最终的日志打印
-                        Log.d("1000","(MainActivity.kt:54)-->> "+it.toString());
-
-                    }
-                }
+                _newsTopData.postValue(response.body()?.top_stories!!)//得到的是一个top_stories类型的对象
+                Log.d("999","(MyViewModel.kt:43)-->> "+_newsTopData.toString())
             }
-
             override fun onFailure(call: Call<RecentNewsData<TopStory>>, t: Throwable) {
                 Log.d("1000","网络请求失败了"+t.message);
             }
-
         })
+
+
+
     }
+
 }
+
+
