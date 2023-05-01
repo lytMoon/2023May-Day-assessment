@@ -109,9 +109,8 @@ class MyViewModel:androidx.lifecycle.ViewModel() {
                 call: Call<RecentNewsData<Story>>,
                 response: Response<RecentNewsData<Story>>
             ) {
-                _BeforeNewsData.postValue(response.body()?.stories!!)//得到的是一个top_stories类型的对象
+                _newsRecentData.postValue(response.body()?.stories!!)//得到的是一个top_stories类型的对象
                 val list = response.body()?.stories!!//得到的是一个top_stories类型的对象
-                val currentList = _BeforeNewsData.value
                 for (it in list) {
                     Log.d("987", "(MyViewModel.kt:101)-->> " + it.url);
                 }
