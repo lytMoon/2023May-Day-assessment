@@ -31,6 +31,7 @@ class NewsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         itemView.setOnClickListener {
             val intent = Intent(itemView.context, newsReadingActivity::class.java)
             //设置标志符
+            intent.putExtra("newsId", news.id)
             intent.putExtra("topNewsUrl", news.url)
             itemView.context.startActivity(intent)
         }

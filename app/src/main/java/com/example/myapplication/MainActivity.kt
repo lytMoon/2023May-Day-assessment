@@ -1,18 +1,21 @@
 package com.example.myapplication
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.example.myapplication.topNewsAdapter.NewsAdapter
 import com.example.myapplication.databinding.ActivityMainBinding
+import com.example.myapplication.myData.Story
 import com.example.myapplication.newsAdapter.RvNewsAdapter
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -33,24 +36,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(mBinding.root)
-
-        /**
-         * 下面是向上刷新
-         */
-
-        mBinding.swipeRefresh.setColorSchemeColors(R.color.black)//设置进度条颜色
-        mBinding.swipeRefresh.setOnRefreshListener {
-            myViewModel.rnTopStorySendQuest()
-            val viewPager:ViewPager2 = mBinding.bannerViewPager
-            val adapter = NewsAdapter()
-            myViewModel.newsTopData.observe(this) { news ->
-                adapter.submitList(news)
-                viewPager.adapter = adapter
-            }
-            mBinding.swipeRefresh.isRefreshing = false
-
-        }
-
         /**
          * 下面是rnTopStorySendQuest()，用于轮播图
          */
@@ -63,10 +48,6 @@ class MainActivity : AppCompatActivity() {
         viewPager.adapter = adapter
 
 
-        /**
-         *下面是对过往消息初始化
-         */
-        myViewModel.rvBeforeStoryQuest("20230425")
 
         /**
          * 下面是rnRecentStoryQuest，用于展示recyclerview
@@ -80,10 +61,37 @@ class MainActivity : AppCompatActivity() {
             rv_adapter.submitList(it)
         }
         rv_viewPager.adapter=rv_adapter
+        /**
+         * 下面是向上刷新
+         */
+        //todo:初始化不够完整
+        mBinding.swipeRefresh.setColorSchemeColors(R.color.black)//设置进度条颜色
+        mBinding.swipeRefresh.setOnRefreshListener {
+            myViewModel.rnTopStorySendQuest()
+            val viewPager:ViewPager2 = mBinding.bannerViewPager
+            val adapter = NewsAdapter()
+            myViewModel.newsTopData.observe(this) { news ->
+                adapter.submitList(news)
+                viewPager.adapter = adapter
+            }
+            mBinding.swipeRefresh.isRefreshing = false
 
+        }
+        /**
+         * 向下刷新
+         */
+        mBinding.recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
 
-
-
+                val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+                val totalItemCount = layoutManager.itemCount
+                val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
+                if (totalItemCount - 1 == lastVisibleItemPosition) {
+                    // 在这里触发新的网络请求
+                }
+            }
+        })
         /**
          下面是设置了轮播的时间间隔：3000ms（3秒）
          原理：
@@ -113,11 +121,13 @@ class MainActivity : AppCompatActivity() {
         menuInflater.inflate(R.menu.toolbar, menu)
         return true
     }
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menu_user -> {
                 Toast.makeText(this, "您点开了用户", Toast.LENGTH_SHORT).show()
+                val intent = Intent(this, LoginActivity::class.java)
+                startActivity(intent)
+
             }
         }
         return true

@@ -1,7 +1,7 @@
 package com.example.myapplication.api
 
-import com.example.myapplication.myData.BeforeNewsData
-import com.example.myapplication.myData.BeforeStory
+import com.example.myapplication.myData.Comment
+import com.example.myapplication.myData.CommentData
 import com.example.myapplication.myData.RecentNewsData
 import com.example.myapplication.myData.Story
 import com.example.myapplication.myData.TopStory
@@ -35,8 +35,14 @@ interface ApiService {
      * https://news-at.zhihu.com/api/4/news/before/20230425
      */
     @GET("api/4/news/before/{time}")
-    fun getBeforeNews(@Path("time")time:String): Call<BeforeNewsData<BeforeStory>>
+    fun getBeforeNews(@Path("time")time:String): Call<RecentNewsData<Story>>
 
+    /**
+     * 下面进行评论区的网络请求
+     * https://news-at.zhihu.com/api/4/news/before/20230425
+     */
+    @GET("api/4/story/{id}/short-comments")
+    fun getCommentNews(@Path("id")time:Int): Call<CommentData<Comment>>
 
 
 

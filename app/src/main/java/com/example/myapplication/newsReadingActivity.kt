@@ -21,6 +21,8 @@ class newsReadingActivity : AppCompatActivity() {
         setContentView(mBinding.root)
         webView=mBinding.myWebView
         val topNewsUrl= intent.getStringExtra("topNewsUrl")
+        val cmId= intent.getIntExtra("newsId",0)//找不到的话那就设置为默认值0
+        Log.d("cmId", "(newsReadingActivity.kt:25)-->> $cmId")
         Log.d("topNewsUrl", "(newsReadingActivity.kt:17)-->> $topNewsUrl")
         if (!topNewsUrl.isNullOrEmpty()) {
             webView.loadUrl(topNewsUrl)
@@ -31,6 +33,10 @@ class newsReadingActivity : AppCompatActivity() {
         }
         mBinding.commentButton.setOnClickListener {
             Toast.makeText(this, "查看评论", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this, CommentActivity::class.java)
+            //设置标志符
+            intent.putExtra("commentID",cmId)
+            startActivity(intent)
 
         }
 
