@@ -10,12 +10,13 @@ import com.example.myapplication.myData.CommentData
 import com.example.myapplication.myData.RecentNewsData
 import com.example.myapplication.myData.Story
 import com.example.myapplication.myData.TopStory
-import kotlinx.coroutines.flow.merge
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.Collections.addAll
+
 /**
  * description ：主要负责网络请求，把数据传入livedata，livedata可被外界观察到
  * author : lytMoon
@@ -26,7 +27,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 class MyViewModel:androidx.lifecycle.ViewModel() {
 
     // 下面进行网络请求
-
     private val _newsTopData: MutableLiveData<List<TopStory>> = MutableLiveData()
     private val _commentData: MutableLiveData<List<Comment>> = MutableLiveData()
     private val _newsRecentData: MutableLiveData<List<Story>> = MutableLiveData()
@@ -109,7 +109,9 @@ class MyViewModel:androidx.lifecycle.ViewModel() {
                 call: Call<RecentNewsData<Story>>,
                 response: Response<RecentNewsData<Story>>
             ) {
-                _newsRecentData.postValue(response.body()?.stories!!)//得到的是一个top_stories类型的对象
+                val newDataList =response.body()?.stories!!
+
+               _newsRecentData.postValue(response.body()?.stories!!)//得到的是一个top_stories类型的对象
                 val list = response.body()?.stories!!//得到的是一个top_stories类型的对象
                 for (it in list) {
                     Log.d("987", "(MyViewModel.kt:101)-->> " + it.url);
@@ -135,6 +137,9 @@ class MyViewModel:androidx.lifecycle.ViewModel() {
 //
 //    }
     }
+
+
+
     fun rvCommentQuest(id: Int) {
         val retrofit = Retrofit.Builder()
             .baseUrl("https://news-at.zhihu.com/")
@@ -155,5 +160,9 @@ class MyViewModel:androidx.lifecycle.ViewModel() {
         })
     }
 }
+
+
+
+
 
 

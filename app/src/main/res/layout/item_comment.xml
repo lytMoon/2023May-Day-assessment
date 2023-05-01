@@ -26,6 +26,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="20sp" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:text="---------------------------------------------------------------------------"
+        android:textSize="10sp"
+        android:textColor="@color/material_dynamic_primary80"/>
 
 
 

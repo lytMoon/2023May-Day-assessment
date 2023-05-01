@@ -23,10 +23,11 @@ class RvNewsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
      val titleView: TextView  = itemView.findViewById(R.id.news_title)
      val tvName :TextView  = itemView.findViewById(R.id.news_hint)
      val imageView: ImageView = itemView.findViewById(R.id.news_imageView)
-
+     val tvTime:TextView =itemView.findViewById(R.id.news_time)
     fun bind(news: Story) {
         tvName.text=news.hint
         titleView.text = news.title
+        tvTime.text=news.ga_prefix
         //通过使用glide来对图片进行绑定和一些处理
         Glide.with(itemView.context)
             .load(news.images.get(0))

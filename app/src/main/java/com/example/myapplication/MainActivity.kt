@@ -2,11 +2,13 @@ package com.example.myapplication
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
@@ -18,13 +20,15 @@ import com.example.myapplication.databinding.ActivityMainBinding
 import com.example.myapplication.myData.Story
 import com.example.myapplication.newsAdapter.RvNewsAdapter
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.Date
 import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
-
-
-
+    @RequiresApi(Build.VERSION_CODES.O)
+    //获得当前时间
+    var currentDate = LocalDate.now()
     //懒加载注入viewmodel
     private val myViewModel by lazy {
         ViewModelProvider(this).get(MyViewModel::class.java)
@@ -32,7 +36,7 @@ class MainActivity : AppCompatActivity() {
 
     //懒加载注入databinding
     private val mBinding: ActivityMainBinding by lazy { ActivityMainBinding.inflate(layoutInflater) }
-    @SuppressLint("ResourceAsColor")
+    @SuppressLint("ResourceAsColor", "NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(mBinding.root)
@@ -68,12 +72,9 @@ class MainActivity : AppCompatActivity() {
         mBinding.swipeRefresh.setColorSchemeColors(R.color.black)//设置进度条颜色
         mBinding.swipeRefresh.setOnRefreshListener {
             myViewModel.rnTopStorySendQuest()
-            val viewPager:ViewPager2 = mBinding.bannerViewPager
-            val adapter = NewsAdapter()
-            myViewModel.newsTopData.observe(this) { news ->
-                adapter.submitList(news)
-                viewPager.adapter = adapter
-            }
+            adapter.notifyDataSetChanged()
+            myViewModel.rnRecentStoryQuest()
+            rv_adapter.notifyDataSetChanged()
             mBinding.swipeRefresh.isRefreshing = false
 
         }
@@ -81,14 +82,23 @@ class MainActivity : AppCompatActivity() {
          * 向下刷新
          */
         mBinding.recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            @RequiresApi(Build.VERSION_CODES.O)
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
+
 
                 val layoutManager = recyclerView.layoutManager as LinearLayoutManager
                 val totalItemCount = layoutManager.itemCount
                 val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
-                if (totalItemCount - 1 == lastVisibleItemPosition) {
-                    // 在这里触发新的网络请求
+                if (totalItemCount - 1 == lastVisibleItemPosition&& !recyclerView.canScrollVertically(1)) {
+                    // 将日期减去一天
+                    currentDate = currentDate.minusDays(1)
+                    // 将日期格式化为字符串
+                    val formatter = DateTimeFormatter.ofPattern("yyyyMMdd")
+                    val m= currentDate.format(formatter)
+                    Log.d("mDtdd","(MainActivity.kt:94)-->> "+m)
+                    myViewModel.rvBeforeStoryQuest(m)
+                    rv_adapter.notifyDataSetChanged()
                 }
             }
         })
@@ -131,8 +141,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
         return true
-    }
-}
+    }}
 
 
 
