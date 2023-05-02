@@ -30,20 +30,12 @@ class MyViewModel:androidx.lifecycle.ViewModel() {
     private val _newsTopData: MutableLiveData<List<TopStory>> = MutableLiveData()
     private val _commentData: MutableLiveData<List<Comment>> = MutableLiveData()
     private val _newsRecentData: MutableLiveData<List<Story>> = MutableLiveData()
-    private val _BeforeNewsData: MutableLiveData<List<Story>> = MutableLiveData()
-    private val _mergedLiveData = MediatorLiveData<List<Story>>()
     val newsTopData: LiveData<List<TopStory>>
         get() = _newsTopData//
     val newsRecentData: LiveData<List<Story>>
         get() = _newsRecentData
-    val newsBeforeData: LiveData<List<Story>>
-        get() = _BeforeNewsData
     val commentData: LiveData<List<Comment>>
         get() = _commentData
-    val mergedLiveData : MediatorLiveData<List<Story>>
-        get() = _mergedLiveData
-
-
     /**
      * 下面进行getTopnews（轮播图的网络请求）
      */
@@ -109,9 +101,10 @@ class MyViewModel:androidx.lifecycle.ViewModel() {
                 call: Call<RecentNewsData<Story>>,
                 response: Response<RecentNewsData<Story>>
             ) {
-                val newDataList =response.body()?.stories!!
-
-               _newsRecentData.postValue(response.body()?.stories!!)//得到的是一个top_stories类型的对象
+                val newDataList = response.body()?.stories!!
+                val oldData = _newsRecentData.value ?: emptyList()//为空的时候返回emptyList
+                _newsRecentData.value = oldData + newDataList// 将新数据添加到旧数据列表中，然后设置为 LiveData 的值
+          //     _newsRecentData.postValue(response.body()?.stories!!)//得到的是一个top_stories类型的对象
                 val list = response.body()?.stories!!//得到的是一个top_stories类型的对象
                 for (it in list) {
                     Log.d("987", "(MyViewModel.kt:101)-->> " + it.url);

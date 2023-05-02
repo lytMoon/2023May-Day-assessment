@@ -4,28 +4,21 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
-import android.net.NetworkInfo
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
-import android.view.ViewGroup.getChildMeasureSpec
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.example.myapplication.topNewsAdapter.NewsAdapter
 import com.example.myapplication.databinding.ActivityMainBinding
-import com.example.myapplication.myData.Story
 import com.example.myapplication.newsAdapter.RvNewsAdapter
-import java.lang.Integer.max
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -43,20 +36,16 @@ class MainActivity : AppCompatActivity() {
 
     //懒加载注入databinding
     private val mBinding: ActivityMainBinding by lazy { ActivityMainBinding.inflate(layoutInflater) }
-    @SuppressLint("ResourceAsColor", "NotifyDataSetChanged")
+    @SuppressLint("ResourceAsColor", "NotifyDataSetChanged", "ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //检查网络连接状态
         if (!isNetworkAvailable()) {
             //如果网络不可用，显示提示界面
-            setContentView(R.layout.activity_network_error);
+            setContentView(R.layout.activity_network_error)
             return
         }
         setContentView(mBinding.root)
-
-
-
-
         /**
          * 下面是rnTopStorySendQuest()，用于轮播图
          */
@@ -75,13 +64,13 @@ class MainActivity : AppCompatActivity() {
          */
         myViewModel.rnRecentStoryQuest()
 
-        val rv_viewPager:RecyclerView = mBinding.recyclerView
+        val rvViewPager:RecyclerView = mBinding.recyclerView
         mBinding.recyclerView.layoutManager = LinearLayoutManager(this)
-        val rv_adapter =RvNewsAdapter()
+        val rvAdapter =RvNewsAdapter()
         myViewModel.newsRecentData.observe(this) { it ->
-            rv_adapter.submitList(it)
+            rvAdapter.submitList(it)
         }
-        rv_viewPager.adapter=rv_adapter
+        rvViewPager.adapter=rvAdapter
         /**
          * 下面是向上刷新
          */
@@ -91,19 +80,38 @@ class MainActivity : AppCompatActivity() {
             myViewModel.rnTopStorySendQuest()
             adapter.notifyDataSetChanged()
             myViewModel.rnRecentStoryQuest()
-            rv_adapter.notifyDataSetChanged()
+            rvAdapter.notifyDataSetChanged()
             mBinding.swipeRefresh.isRefreshing = false
 
         }
+
+        /**
+         * 下面实现滑动冲突
+         * 原理：弃用，会是app卡顿。
+         */
+//        mBinding.nestedScrollView.setOnTouchListener { _, event ->
+//            when (event.action) {
+//                MotionEvent.ACTION_DOWN -> {
+//                    mBinding.nestedScrollView.requestDisallowInterceptTouchEvent(true)
+//                }
+//                MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+//                    mBinding.nestedScrollView.requestDisallowInterceptTouchEvent(false)
+//                }
+//            }
+//            false
+//        }
+
+
+
         /**
          * 向下刷新
          */
+
+
         mBinding.recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             @RequiresApi(Build.VERSION_CODES.O)
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-
-
                 val layoutManager = recyclerView.layoutManager as LinearLayoutManager
                 val totalItemCount = layoutManager.itemCount
                 val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
@@ -115,7 +123,7 @@ class MainActivity : AppCompatActivity() {
                     val m= currentDate.format(formatter)
                     Log.d("mDtdd","(MainActivity.kt:94)-->> "+m)
                     myViewModel.rvBeforeStoryQuest(m)
-                    rv_adapter.notifyDataSetChanged()
+                    rvAdapter.notifyDataSetChanged()
                 }
             }
         })
@@ -138,7 +146,7 @@ class MainActivity : AppCompatActivity() {
         val currentDate = Date()//获取时间
         val dateFormat = SimpleDateFormat("M月dd日", Locale.getDefault())
         val dateString = dateFormat.format(currentDate)
-        Log.d("555", "(MainActivity.kt:20)-->> " + dateString);
+        Log.d("555", "(MainActivity.kt:20)-->> $dateString");
         // 将日期设置为Toolbar标题
         mBinding.toolBar.title = "$dateString         新闻简阅"
     }
@@ -161,9 +169,6 @@ class MainActivity : AppCompatActivity() {
         }
         return true
     }
-    /**
-     * 检查网络连接状态
-     */
 
 
     /**
