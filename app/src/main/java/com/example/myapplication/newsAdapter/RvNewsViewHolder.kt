@@ -10,7 +10,7 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.myapplication.R
 import com.example.myapplication.myData.Story
-import com.example.myapplication.newsReadingActivity
+import com.example.myapplication.NewsReadingActivity
 
 /**
  * description ：
@@ -36,7 +36,7 @@ class RvNewsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
 
         itemView.setOnClickListener {
-            val intent = Intent(itemView.context, newsReadingActivity::class.java)
+            val intent = Intent(itemView.context, NewsReadingActivity::class.java)
             //设置标志符
             intent.putExtra("topNewsUrl", news.url)
             intent.putExtra("newsId", news.id)

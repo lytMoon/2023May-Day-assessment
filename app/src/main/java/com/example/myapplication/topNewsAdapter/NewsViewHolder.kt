@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.myapplication.R
 import com.example.myapplication.myData.TopStory
-import com.example.myapplication.newsReadingActivity
+import com.example.myapplication.NewsReadingActivity
 
 /**
  * description ：
@@ -29,7 +29,7 @@ class NewsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
 
         itemView.setOnClickListener {
-            val intent = Intent(itemView.context, newsReadingActivity::class.java)
+            val intent = Intent(itemView.context, NewsReadingActivity::class.java)
             //设置标志符
             intent.putExtra("newsId", news.id)
             intent.putExtra("topNewsUrl", news.url)

@@ -23,7 +23,7 @@
                 app:title="默认"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:background="@color/design_default_color_background"
+                android:background="@color/white"
                 app:titleTextColor="@color/black"
                 android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>

@@ -10,7 +10,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".newsReadingActivity">
+        tools:context=".NewsReadingActivity">
 
         <WebView
             android:id="@+id/my_webView"

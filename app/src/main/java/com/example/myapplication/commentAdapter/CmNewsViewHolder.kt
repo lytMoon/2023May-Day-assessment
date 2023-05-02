@@ -1,6 +1,5 @@
 package com.example.myapplication.commentAdapter
 
-import android.content.Intent
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -8,8 +7,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.myapplication.R
 import com.example.myapplication.myData.Comment
-import com.example.myapplication.myData.TopStory
-import com.example.myapplication.newsReadingActivity
 
 /**
  * description ：

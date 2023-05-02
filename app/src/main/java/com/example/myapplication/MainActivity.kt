@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
     //获得当前时间
     var currentDate = LocalDate.now()
     //懒加载注入viewmodel
-    private val myViewModel by lazy {
+    val myViewModel by lazy {
         ViewModelProvider(this).get(MyViewModel::class.java)
     }
 
@@ -148,7 +148,7 @@ class MainActivity : AppCompatActivity() {
         val dateString = dateFormat.format(currentDate)
         Log.d("555", "(MainActivity.kt:20)-->> $dateString");
         // 将日期设置为Toolbar标题
-        mBinding.toolBar.title = "$dateString         新闻简阅"
+        mBinding.toolBar.title = "$dateString             迷糊日报"
     }
 
 
@@ -180,6 +180,10 @@ class MainActivity : AppCompatActivity() {
         val networkInfo = connectivityManager.activeNetworkInfo
         return networkInfo != null && networkInfo.isConnected
     }
+
+
+
+
 }
 
 

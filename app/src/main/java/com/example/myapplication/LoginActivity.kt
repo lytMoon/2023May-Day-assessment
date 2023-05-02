@@ -22,22 +22,21 @@ class LoginActivity : AppCompatActivity() {
         mBinding.imZhihu.setOnClickListener {
             Toast.makeText(this, "功能还在完善中", Toast.LENGTH_SHORT).show()
         }
-        //Todo:夜间模式
+        /**
+         * 下面实现夜间模式，采用安卓官方的方法,不需要再重建activity
+         */
         mBinding.imNight.setOnClickListener {
             Toast.makeText(this, "功能还在完善中", Toast.LENGTH_SHORT).show()
-
-//            val currentNightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
-//            when (currentNightMode) {
-//                Configuration.UI_MODE_NIGHT_NO -> {
-//                    // 切换到夜间模式
-//                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-//                }
-//                Configuration.UI_MODE_NIGHT_YES -> {
-//                    // 切换到白天模式
-//                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-//                }
-//            }
-//            recreate() // 重新创建Activity以应用新主题
+            when (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
+                Configuration.UI_MODE_NIGHT_NO -> {
+                    // 切换到夜间模式
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                }
+                Configuration.UI_MODE_NIGHT_YES -> {
+                    // 切换到白天模式
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                }
+            }
         }
 
 

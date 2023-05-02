@@ -24,7 +24,7 @@
             android:layout_marginBottom="25dp"
             android:padding="10dp"
             android:text="@string/title"
-            android:textColor="@color/white"
+            android:textColor="@color/titleColor"
             android:textStyle="bold"
             android:textSize="22sp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -34,7 +34,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="10dp"
-            android:textColor="#D7D3D3"
+            android:textColor="@color/litleWhite"
             android:textSize="17sp"
             app:layout_constraintBottom_toBottomOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
