@@ -1,12 +1,18 @@
 package com.example.myapplication
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
+import android.view.ViewGroup.getChildMeasureSpec
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -19,6 +25,7 @@ import com.example.myapplication.topNewsAdapter.NewsAdapter
 import com.example.myapplication.databinding.ActivityMainBinding
 import com.example.myapplication.myData.Story
 import com.example.myapplication.newsAdapter.RvNewsAdapter
+import java.lang.Integer.max
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -39,7 +46,17 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("ResourceAsColor", "NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        //检查网络连接状态
+        if (!isNetworkAvailable()) {
+            //如果网络不可用，显示提示界面
+            setContentView(R.layout.activity_network_error);
+            return
+        }
         setContentView(mBinding.root)
+
+
+
+
         /**
          * 下面是rnTopStorySendQuest()，用于轮播图
          */
@@ -127,6 +144,8 @@ class MainActivity : AppCompatActivity() {
     }
 
 
+
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.toolbar, menu)
         return true
@@ -141,7 +160,23 @@ class MainActivity : AppCompatActivity() {
             }
         }
         return true
-    }}
+    }
+    /**
+     * 检查网络连接状态
+     */
+
+
+    /**
+     *
+     * 检查网络连接状态
+     */
+    private fun isNetworkAvailable(): Boolean {
+        val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val networkInfo = connectivityManager.activeNetworkInfo
+        return networkInfo != null && networkInfo.isConnected
+    }
+}
+
 
 
 
