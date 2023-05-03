@@ -1,5 +1,4 @@
 package com.example.myapplication
-
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
@@ -7,7 +6,6 @@ import android.net.ConnectivityManager
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
@@ -18,7 +16,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.example.myapplication.databinding.ActivityMainBinding
-import com.example.myapplication.detailAdapter.DetailNewsAdapter
 import com.example.myapplication.newsAdapter.RvNewsAdapter
 import com.example.myapplication.topNewsAdapter.NewsAdapter
 import com.google.gson.Gson
@@ -27,10 +24,7 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Date
 import java.util.Locale
-
-
 class MainActivity : AppCompatActivity() {
-
     //获得当前时间
     @RequiresApi(Build.VERSION_CODES.O)
     var currentDate = LocalDate.now()
@@ -38,7 +32,6 @@ class MainActivity : AppCompatActivity() {
     val myViewModel by lazy {
         ViewModelProvider(this).get(MyViewModel::class.java)
     }
-
     //懒加载注入databinding
     private val mBinding: ActivityMainBinding by lazy { ActivityMainBinding.inflate(layoutInflater) }
     @SuppressLint("ResourceAsColor", "NotifyDataSetChanged", "ClickableViewAccessibility")
@@ -51,11 +44,9 @@ class MainActivity : AppCompatActivity() {
             return
         }
         setContentView(mBinding.root)
-
         /**
          * 轻量储存数据
          */
-
         // 获取 SharedPreferences 对象
         val sharedPreferences = getSharedPreferences("MY_SHARED_PREFERENCES", Context.MODE_PRIVATE)
         // 将 LiveData 对象的值以 JSON 字符串的形式保存到 SharedPreferences 中
@@ -82,7 +73,6 @@ class MainActivity : AppCompatActivity() {
                 mdata.add(it.url)
             }
             Log.d("854785", "(MainActivity.kt:114)-->> $mdata")
-
         }
         myViewModel.rnRecentStoryQuest()
         val rvViewPager:RecyclerView = mBinding.recyclerView
@@ -92,9 +82,6 @@ class MainActivity : AppCompatActivity() {
             rvAdapter.submitList(it)
         }
         rvViewPager.adapter=rvAdapter
-//        editor.putString("LIVE_DATA_KEY", Gson().toJson(myViewModel.newsRecentData.value))
-//        editor.apply()
-
         /**
          * 下面是向上刷新
          */
@@ -129,14 +116,9 @@ class MainActivity : AppCompatActivity() {
                     editor.putString("LIVE_DATA_KEY", Gson().toJson(myViewModel.newsRecentData.value))
                     editor.apply()
                     rvAdapter.notifyDataSetChanged()
-
                 }
             }
         })
-        /**
-         * 下面法进行数据传递
-         */
-
         /**
          下面是设置了轮播的时间间隔：3000ms（3秒）
          原理：
@@ -146,7 +128,6 @@ class MainActivity : AppCompatActivity() {
                 super.onPageSelected(position)
             }
         })
-
         viewPager.postDelayed({
             viewPager.currentItem = (viewPager.currentItem + 1) % adapter.itemCount
         }, 3000)
@@ -160,10 +141,6 @@ class MainActivity : AppCompatActivity() {
         // 将日期设置为Toolbar标题
         mBinding.toolBar.title = "$dateString             迷乎日报"
     }
-
-
-
-
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.toolbar, menu)
         return true
@@ -179,8 +156,6 @@ class MainActivity : AppCompatActivity() {
         }
         return true
     }
-
-
     /**
      *
      * 检查网络连接状态
@@ -190,10 +165,6 @@ class MainActivity : AppCompatActivity() {
         val networkInfo = connectivityManager.activeNetworkInfo
         return networkInfo != null && networkInfo.isConnected
     }
-
-
-
-
 }
 
 
