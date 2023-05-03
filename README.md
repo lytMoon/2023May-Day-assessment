@@ -8,35 +8,50 @@ app：对标（模仿）知乎日报的迷乎日报
 
 这个app是按照知乎日报的app的样式制作的。
 
-# 很抱歉没有考虑到屏幕尺寸的问题，布局写的有点问题。
+# 很抱歉没有考虑到屏幕尺寸的问题，布局写的有点问题（只是以我的屏幕尺寸为参照！）
 
 主要的界面如图所示：
 
-1.
+1.![c2392c237e1fad05b29544844a3dded](https://user-images.githubusercontent.com/117186626/235841428-7ae0f433-7971-42dd-bc73-2f4bdfd8da3e.jpg)
 
-2.
 
-3.
+2.![6260eab6a50d52ee1b2bf2957024181](https://user-images.githubusercontent.com/117186626/235841447-b1c27759-e518-4237-96fb-4e245b3bd116.jpg)
 
-4.
 
-5.
+3.![1b1aaf709b45b9343457e4bb7181aae](https://user-images.githubusercontent.com/117186626/235841460-353a26a1-a7fc-4c74-ab9d-f61b06cbabd5.jpg)
 
-6.
+
+4.![a5310f3036ef499b2ec5589288968c3](https://user-images.githubusercontent.com/117186626/235841475-7648ee5d-708c-4d83-8a40-2d0024479300.jpg)
+
+
+5.![8de56a8e66c71197116384a1e82e277](https://user-images.githubusercontent.com/117186626/235841492-fad4e0b6-9727-40b0-a0c2-d1d6c7449dcd.jpg)
+
+
+6.![eb4c0ae1d616320a9f18e23bb9f6cd7](https://user-images.githubusercontent.com/117186626/235841504-4e259084-3e7a-4bc7-a1d9-ca26f7a64e8a.jpg)
+
+7.![9d8abbc976a6325d42efcf054a8148c](https://user-images.githubusercontent.com/117186626/235841599-3b680d4b-46a3-41b2-b664-0c1c7a15c48f.jpg)
 
 ## app的功能展示：
 
 1.实现了上拉进行刷新
+![1683093702107](https://user-images.githubusercontent.com/117186626/235842196-b6c155f9-3dbc-4d0f-959a-04a850bb8c9c.gif)
+
 
 2.实现了下拉加载
+![1683093809688](https://user-images.githubusercontent.com/117186626/235842390-cd16e2ce-6f7d-4662-af2f-af4e068ac82c.gif)
 
 3.实现了左右滑动
+![1683093936297](https://user-images.githubusercontent.com/117186626/235842980-445b2f0b-5dfa-45f4-81ac-ba0be90f297f.gif)
 
 4.实现了黑夜模式（有坑，不要轻易点击）
-
-5.使用viewpager2进行轮播图的转换
+上面有图。
+5.使用viewpager2展示topnews，实现滑动
+（未完全实现轮播图，只能转动一次）
+![1683094160770](https://user-images.githubusercontent.com/117186626/235843075-d106ac2d-bc94-4c97-8131-4ea717b4ea01.gif)
 
 6.实现了，新闻浏览界面的返回，查看评论区，分享功能
+![1683094297968](https://user-images.githubusercontent.com/117186626/235843353-8a3dd011-2a12-4689-8e36-35bbeb999bd3.gif)
+
 
 ## app主要功能的实现思路
 
