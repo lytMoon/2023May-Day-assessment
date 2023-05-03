@@ -33,8 +33,6 @@ class RvNewsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             .load(news.images.get(0))
             .transform(CenterCrop(), RoundedCorners(10))//设置圆角
             .into(imageView)
-
-
         itemView.setOnClickListener {
             val intent = Intent(itemView.context, NewsReadingActivity::class.java)
             //设置标志符

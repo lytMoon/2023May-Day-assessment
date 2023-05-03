@@ -12,10 +12,10 @@
         android:layout_height="match_parent"
         tools:context=".NewsReadingActivity">
 
-        <WebView
-            android:id="@+id/my_webView"
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/detail_viewpager2"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"/>
 
         <LinearLayout
             android:id="@+id/bottomLayout"

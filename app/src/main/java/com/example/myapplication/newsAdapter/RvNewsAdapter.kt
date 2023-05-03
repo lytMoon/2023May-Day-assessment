@@ -15,7 +15,6 @@ import com.example.myapplication.myData.TopStory
  * version: 1.0
  */
 class RvNewsAdapter : ListAdapter<Story, RvNewsViewHolder>(RvNewsDiffCallback()) {
-    private val data: MutableList<Story> = mutableListOf()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RvNewsViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.news_item, parent, false)
         return RvNewsViewHolder(view)
@@ -25,9 +24,5 @@ class RvNewsAdapter : ListAdapter<Story, RvNewsViewHolder>(RvNewsDiffCallback())
         val news = getItem(position)
         holder.bind(news)
     }
-    fun updateData(newData: List<Story>) {
-        val startPosition = data.size
-        data.addAll(newData)
-        notifyItemRangeInserted(startPosition, newData.size)
-    }
+
 }

@@ -7,6 +7,7 @@ import android.net.ConnectivityManager
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
@@ -16,18 +17,22 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
-import com.example.myapplication.topNewsAdapter.NewsAdapter
 import com.example.myapplication.databinding.ActivityMainBinding
+import com.example.myapplication.detailAdapter.DetailNewsAdapter
 import com.example.myapplication.newsAdapter.RvNewsAdapter
+import com.example.myapplication.topNewsAdapter.NewsAdapter
+import com.google.gson.Gson
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Date
 import java.util.Locale
 
+
 class MainActivity : AppCompatActivity() {
-    @RequiresApi(Build.VERSION_CODES.O)
+
     //获得当前时间
+    @RequiresApi(Build.VERSION_CODES.O)
     var currentDate = LocalDate.now()
     //懒加载注入viewmodel
     val myViewModel by lazy {
@@ -46,6 +51,15 @@ class MainActivity : AppCompatActivity() {
             return
         }
         setContentView(mBinding.root)
+
+        /**
+         * 轻量储存数据
+         */
+
+        // 获取 SharedPreferences 对象
+        val sharedPreferences = getSharedPreferences("MY_SHARED_PREFERENCES", Context.MODE_PRIVATE)
+        // 将 LiveData 对象的值以 JSON 字符串的形式保存到 SharedPreferences 中
+        val editor = sharedPreferences.edit()
         /**
          * 下面是rnTopStorySendQuest()，用于轮播图
          */
@@ -54,16 +68,23 @@ class MainActivity : AppCompatActivity() {
         val adapter = NewsAdapter()
         myViewModel.newsTopData.observe(this) { news ->
             adapter.submitList(news)
+            Log.d("96369","(MainActivity.kt:69)-->> "+news.toString());
         }
         viewPager.adapter = adapter
-
-
-
+        editor.putString("LIVE_DATA_KEY", Gson().toJson(myViewModel.newsRecentData.value))
+        editor.apply()
         /**
          * 下面是rnRecentStoryQuest，用于展示recyclerview
          */
-        myViewModel.rnRecentStoryQuest()
+        val mdata= ArrayList<String>()
+        myViewModel.newsRecentData.observe(this){list->
+            for (it in list){
+                mdata.add(it.url)
+            }
+            Log.d("854785", "(MainActivity.kt:114)-->> $mdata")
 
+        }
+        myViewModel.rnRecentStoryQuest()
         val rvViewPager:RecyclerView = mBinding.recyclerView
         mBinding.recyclerView.layoutManager = LinearLayoutManager(this)
         val rvAdapter =RvNewsAdapter()
@@ -71,6 +92,9 @@ class MainActivity : AppCompatActivity() {
             rvAdapter.submitList(it)
         }
         rvViewPager.adapter=rvAdapter
+//        editor.putString("LIVE_DATA_KEY", Gson().toJson(myViewModel.newsRecentData.value))
+//        editor.apply()
+
         /**
          * 下面是向上刷新
          */
@@ -84,30 +108,9 @@ class MainActivity : AppCompatActivity() {
             mBinding.swipeRefresh.isRefreshing = false
 
         }
-
-        /**
-         * 下面实现滑动冲突
-         * 原理：弃用，会是app卡顿。
-         */
-//        mBinding.nestedScrollView.setOnTouchListener { _, event ->
-//            when (event.action) {
-//                MotionEvent.ACTION_DOWN -> {
-//                    mBinding.nestedScrollView.requestDisallowInterceptTouchEvent(true)
-//                }
-//                MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
-//                    mBinding.nestedScrollView.requestDisallowInterceptTouchEvent(false)
-//                }
-//            }
-//            false
-//        }
-
-
-
         /**
          * 向下刷新
          */
-
-
         mBinding.recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             @RequiresApi(Build.VERSION_CODES.O)
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -123,10 +126,17 @@ class MainActivity : AppCompatActivity() {
                     val m= currentDate.format(formatter)
                     Log.d("mDtdd","(MainActivity.kt:94)-->> "+m)
                     myViewModel.rvBeforeStoryQuest(m)
+                    editor.putString("LIVE_DATA_KEY", Gson().toJson(myViewModel.newsRecentData.value))
+                    editor.apply()
                     rvAdapter.notifyDataSetChanged()
+
                 }
             }
         })
+        /**
+         * 下面法进行数据传递
+         */
+
         /**
          下面是设置了轮播的时间间隔：3000ms（3秒）
          原理：
@@ -148,7 +158,7 @@ class MainActivity : AppCompatActivity() {
         val dateString = dateFormat.format(currentDate)
         Log.d("555", "(MainActivity.kt:20)-->> $dateString");
         // 将日期设置为Toolbar标题
-        mBinding.toolBar.title = "$dateString             迷糊日报"
+        mBinding.toolBar.title = "$dateString             迷乎日报"
     }
 
 
