@@ -1,14 +1,16 @@
-package com.example.myapplication
+package com.example.myapplication.ui
 
-import android.content.res.Configuration import android.os.Bundle
+import android.content.res.Configuration
+import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import com.example.myapplication.databinding.ActivityLoginBinding
+import com.example.myapplication.databinding.ActivityMainBinding
 
 
 class LoginActivity : AppCompatActivity() {
-    //懒加载注入databinding
+
     private val mBinding: ActivityLoginBinding by lazy { ActivityLoginBinding.inflate(layoutInflater) }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,6 +39,7 @@ class LoginActivity : AppCompatActivity() {
                     editor.apply()
 
                 }
+
                 Configuration.UI_MODE_NIGHT_YES -> {
                     // 切换到白天模式
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)

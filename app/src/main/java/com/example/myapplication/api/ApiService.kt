@@ -5,7 +5,7 @@ import com.example.myapplication.myData.CommentData
 import com.example.myapplication.myData.RecentNewsData
 import com.example.myapplication.myData.Story
 import com.example.myapplication.myData.TopStory
-import retrofit2.Call
+import io.reactivex.rxjava3.core.Observable
 import retrofit2.http.GET
 import retrofit2.http.Path
 
@@ -22,28 +22,27 @@ interface ApiService {
     下面是最新的新闻消息，用于我们的轮播图
      */
     @GET("api/4/news/latest")
-    fun getRecentTopNews(): Call<RecentNewsData<TopStory>>
+    fun getTopNews(): Observable<RecentNewsData<TopStory>>
 
     /**
     下面是进行最新消息的请求
      */
     @GET("api/4/news/latest")
-    fun getRecentNews(): Call<RecentNewsData<Story>>
+    fun getNews(): Observable<RecentNewsData<Story>>
 
     /**
      * 下面进行更早的新闻消息的网络请求
      * https://news-at.zhihu.com/api/4/news/before/20230425
      */
     @GET("api/4/news/before/{time}")
-    fun getBeforeNews(@Path("time")time:String): Call<RecentNewsData<Story>>
+    fun getBeforeNews(@Path("time") time: String): Observable<RecentNewsData<Story>>
 
     /**
      * 下面进行评论区的网络请求
      * https://news-at.zhihu.com/api/4/news/before/20230425
      */
     @GET("api/4/story/{id}/short-comments")
-    fun getCommentNews(@Path("id")time:Int): Call<CommentData<Comment>>
-
+    fun getCommentNews(@Path("id") time: Int): Observable<CommentData<Comment>>
 
 
 }

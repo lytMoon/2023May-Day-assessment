@@ -1,19 +1,17 @@
-package com.example.myapplication
-import android.annotation.SuppressLint
+package com.example.myapplication.ui
+
 import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.MotionEvent
-import android.view.View
-import android.webkit.WebView
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
+import com.example.myapplication.viewmodel.MyViewModel
 import com.example.myapplication.databinding.ActivityNewsReadingBinding
-import com.example.myapplication.detailAdapter.DetailNewsAdapter
+import com.example.myapplication.adapter.DetailNewsAdapter
 import com.example.myapplication.myData.Story
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -21,11 +19,10 @@ import com.google.gson.reflect.TypeToken
 /**
  * 这是一个主要负责阅读查看器的activity
  */
-class NewsReadingActivity : AppCompatActivity() {
+class DetailActivity : AppCompatActivity() {
     private val myViewModel by lazy {
-        ViewModelProvider(this).get(MyViewModel::class.java)
+        ViewModelProvider(this)[MyViewModel::class.java]
     }
-    private lateinit var webView: WebView
     private val mBinding: ActivityNewsReadingBinding by lazy {
         ActivityNewsReadingBinding.inflate(layoutInflater)
     }
@@ -39,31 +36,31 @@ class NewsReadingActivity : AppCompatActivity() {
          */
         // 获取 SharedPreferences 对象
         val sharedPreferences = getSharedPreferences("MY_SHARED_PREFERENCES", Context.MODE_PRIVATE)
-      // 从 SharedPreferences 中读取 LiveData 对象的值，并将其转换为 List<Story> 类型
+        // 从 SharedPreferences 中读取 LiveData 对象的值，并将其转换为 List<Story> 类型
         val liveDataValue = sharedPreferences.getString("LIVE_DATA_KEY", null)
         val listType = object : TypeToken<List<Story>>() {}.type
         val liveData = MutableLiveData<List<Story>>(Gson().fromJson(liveDataValue, listType))
         val vp2: ViewPager2 = mBinding.detailViewpager2
-        val adapter=DetailNewsAdapter()
+        val adapter = DetailNewsAdapter()
 
-        liveData.observe(this){list->
+        liveData.observe(this) { list ->
             adapter.submitList(list)
         }
-        vp2.adapter=adapter
+        vp2.adapter = adapter
         //webView = mBinding.myWebView
         val topNewsUrl = intent.getStringExtra("topNewsUrl")
         val cmId = intent.getIntExtra("newsId", 0)//找不到的话那就设置为默认值0
 
         Log.d("cmId", "(newsReadingActivity.kt:25)-->> $cmId")
         Log.d("topNewsUrl", "(newsReadingActivity.kt:17)-->> $topNewsUrl")
-        liveData.observe(this){list->
+        liveData.observe(this) { list ->
             val currentList = ArrayList<String>()
-            for ( it in list) {
+            for (it in list) {
                 currentList.add(it.url)
             }
             //获得item对应的东西
 
-            val position =currentList.indexOf(topNewsUrl)
+            val position = currentList.indexOf(topNewsUrl)
             Log.d("myposi", "(newsReadingActivity.kt:25)-->> ${position}")
             mBinding.detailViewpager2.setCurrentItem(position)
         }
@@ -78,7 +75,7 @@ class NewsReadingActivity : AppCompatActivity() {
             Toast.makeText(this, "查看评论", Toast.LENGTH_SHORT).show()
             val intent = Intent(this, CommentActivity::class.java)
             //设置标志符
-           intent.putExtra("commentID", cmId)
+            intent.putExtra("commentID", cmId)
             startActivity(intent)
 
         }

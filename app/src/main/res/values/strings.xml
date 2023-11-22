@@ -3,4 +3,8 @@
     <string name="title">标题</string>
     <string name="author">作者：</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="login">登录您的日报</string>
+    <string name="loginWay">选择登录方式</string>
+    <string name="acceptData">我同意 《协议》 和 《个人信息保护指引》</string>
+    <string name="comment">评论</string>
 </resources>

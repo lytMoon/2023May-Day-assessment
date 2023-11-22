@@ -1,7 +1,7 @@
 package com.example.myapplication.myData
 
 /**
- * description ：
+ * description ：负责轮播图和消息的数据接收类
  * author : lytMoon
  * email : yytds@foxmail.com
  * date : 2023/4/29 16:43
