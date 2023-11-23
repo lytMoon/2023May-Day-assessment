@@ -32,7 +32,7 @@ class DetailActivity : AppCompatActivity() {
         setContentView(mBinding.root)
         /***
          *
-         * 获得liveddata
+         * 获得livedData
          */
         // 获取 SharedPreferences 对象
         val sharedPreferences = getSharedPreferences("MY_SHARED_PREFERENCES", Context.MODE_PRIVATE)

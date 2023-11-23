@@ -42,7 +42,7 @@ class MyViewModel : ViewModel() {
     /**
      * 获取轮播图数据
      */
-    private fun receiveTopNews() {
+     fun receiveTopNews() {
 
         NetObj.getTopNews()
             .subscribe(object : Observer<RecentNewsData<TopStory>> {
@@ -66,7 +66,7 @@ class MyViewModel : ViewModel() {
     /**
      * 获取初始显示的新闻数据
      */
-    private fun receiveNewsData() {
+     fun receiveNewsData() {
         NetObj.getNews().subscribe(object : Observer<RecentNewsData<Story>> {
             override fun onSubscribe(d: Disposable) {
             }
@@ -105,6 +105,7 @@ class MyViewModel : ViewModel() {
 
                 override fun onNext(t: RecentNewsData<Story>) {
                     _newsRecentData.value = _newsRecentData.value?.plus(t.stories)
+                    Log.d("48484884","MyViewModel.kt:------>${t.stories}")
                     //等价于下面
 //                    val newData = t.stories
 //                    val oldData = _newsRecentData.value ?: emptyList()//为空的时候返回emptyList
