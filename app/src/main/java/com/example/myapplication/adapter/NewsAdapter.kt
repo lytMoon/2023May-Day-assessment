@@ -1,6 +1,10 @@
 package com.example.myapplication.adapter
 
+import android.annotation.SuppressLint
+import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
+import android.view.VelocityTracker
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -24,16 +28,16 @@ import com.example.myapplication.myData.Story
  * date : 2023/4/30 08:49
  * version: 1.0
  */
-class NewsAdapter() :
-    ListAdapter<Story, ViewHolder>(object : DiffUtil.ItemCallback<Story>() {
-        override fun areItemsTheSame(oldItem: Story, newItem: Story): Boolean {
-            return oldItem == newItem
-        }
+class NewsAdapter() : ListAdapter<Story, ViewHolder>(object : DiffUtil.ItemCallback<Story>() {
+    override fun areItemsTheSame(oldItem: Story, newItem: Story): Boolean {
+        return oldItem == newItem
+    }
 
-        override fun areContentsTheSame(oldItem: Story, newItem: Story): Boolean {
-            return oldItem.title == newItem.title
-        }
-    }) {
+    override fun areContentsTheSame(oldItem: Story, newItem: Story): Boolean {
+        return oldItem.title == newItem.title
+    }
+}) {
+
 
     //默认是没有滑动
     private var isScrolling = false
@@ -73,8 +77,7 @@ class NewsAdapter() :
             //轮播图
             0 -> {
                 val view =
-                    LayoutInflater.from(parent.context)
-                        .inflate(R.layout.item_top_rv, parent, false)
+                    LayoutInflater.from(parent.context).inflate(R.layout.item_top_rv, parent, false)
                 mViewPager = view.findViewById(R.id.banner_view_pager)
                 initBannerAdapter()
                 return RvNewsTopViewHolder(view)
@@ -93,10 +96,6 @@ class NewsAdapter() :
     //初始化Banner的Adapter
     private fun initBannerAdapter() {
         bannerVpHelper = BannerVpHelper(mViewPager, bannerNewsList)
-        mViewPager.setCurrentItem(
-            bannerNewsList.size * 100,
-            false
-        ) // 设置一个较大的初始位置，使得用户可以向左滑动
         bannerVpHelper.startRun()
         viewPager2Adapter.submitList(bannerNewsList)
         mViewPager.adapter = viewPager2Adapter
@@ -109,15 +108,20 @@ class NewsAdapter() :
 
     //检测手指的滑动事件
     private fun onPageChange() {
+
         mViewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+
+
+            var n = 0
             override fun onPageScrollStateChanged(state: Int) {
                 when (state) {
                     //拖拽事件
                     ViewPager2.SCROLL_STATE_DRAGGING -> {
+                        n++
+                        Log.d("484848", "NewsAdapter.kt:------")
                         bannerVpHelper.pauseLoop()
                         isScrolling = true
                         viewPager2Adapter.addPageChange(true)
-
 
                     }
                     //手指松开的事件
@@ -127,8 +131,28 @@ class NewsAdapter() :
                         viewPager2Adapter.addPageChange(false)
                     }
 
+
                     else -> {
                     }
+                }
+            }
+
+            /**
+             *因为默认vp从0开始所以最早会触发这个回调，我么那就让他迅速的转移到较大的位置
+             * 这个回调执行的逻辑只会执行一次
+             */
+            var once = false
+            override fun onPageSelected(position: Int) {
+                Log.d("5858958948548945", "NewsAdapter.kt:------>${position}")
+                if (!once) {
+                    once = true
+                    mViewPager.setCurrentItem(bannerNewsList.size * 100, false)
+                }
+                /**
+                 * 这里为了防止0过快的把current覆盖，所以做了一个判断，必须让position不能为0的时候才进行值的传递。及时更新
+                 */
+                if (position != 0) {
+                    bannerVpHelper.changeCurrentPage(position)
                 }
             }
         })
@@ -143,7 +167,6 @@ class NewsAdapter() :
                 holder.bind(itemData)
             }
         }
-
     }
 
 
