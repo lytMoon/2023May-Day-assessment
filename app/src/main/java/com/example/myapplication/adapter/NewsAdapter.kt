@@ -41,11 +41,8 @@ class NewsAdapter() : ListAdapter<Story, ViewHolder>(object : DiffUtil.ItemCallb
 
     //默认是没有滑动
     private var isScrolling = false
-    lateinit var bannerVpHelper: BannerVpHelper
-    val viewPager2Adapter: BannerAdapter = BannerAdapter()
-
-    private lateinit var bannerNewsList: List<Story>
-    private lateinit var mViewPager: ViewPager2
+     lateinit var bannerNewsList: List<Story>
+    lateinit var mViewPager: ViewPager2
 
     /**
      * 点击按钮的回调
@@ -79,7 +76,6 @@ class NewsAdapter() : ListAdapter<Story, ViewHolder>(object : DiffUtil.ItemCallb
                 val view =
                     LayoutInflater.from(parent.context).inflate(R.layout.item_top_rv, parent, false)
                 mViewPager = view.findViewById(R.id.banner_view_pager)
-                initBannerAdapter()
                 return RvNewsTopViewHolder(view)
             }
 
@@ -93,70 +89,11 @@ class NewsAdapter() : ListAdapter<Story, ViewHolder>(object : DiffUtil.ItemCallb
 
     }
 
-    //初始化Banner的Adapter
-    private fun initBannerAdapter() {
-        bannerVpHelper = BannerVpHelper(mViewPager, bannerNewsList)
-        bannerVpHelper.startRun()
-        viewPager2Adapter.submitList(bannerNewsList)
-        mViewPager.adapter = viewPager2Adapter
-        onPageChange()
-    }
 
     fun submitBannerList(bannerNewsList: List<Story>) {
         this.bannerNewsList = bannerNewsList
     }
 
-    //检测手指的滑动事件
-    private fun onPageChange() {
-
-        mViewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-
-
-            var n = 0
-            override fun onPageScrollStateChanged(state: Int) {
-                when (state) {
-                    //拖拽事件
-                    ViewPager2.SCROLL_STATE_DRAGGING -> {
-                        n++
-                        Log.d("484848", "NewsAdapter.kt:------")
-                        bannerVpHelper.pauseLoop()
-                        isScrolling = true
-                        viewPager2Adapter.addPageChange(true)
-
-                    }
-                    //手指松开的事件
-                    ViewPager2.SCROLL_STATE_SETTLING -> {
-                        bannerVpHelper.resumeLoop()
-                        isScrolling = false
-                        viewPager2Adapter.addPageChange(false)
-                    }
-
-
-                    else -> {
-                    }
-                }
-            }
-
-            /**
-             *因为默认vp从0开始所以最早会触发这个回调，我么那就让他迅速的转移到较大的位置
-             * 这个回调执行的逻辑只会执行一次
-             */
-            var once = false
-            override fun onPageSelected(position: Int) {
-                Log.d("5858958948548945", "NewsAdapter.kt:------>${position}")
-                if (!once) {
-                    once = true
-                    mViewPager.setCurrentItem(bannerNewsList.size * 100, false)
-                }
-                /**
-                 * 这里为了防止0过快的把current覆盖，所以做了一个判断，必须让position不能为0的时候才进行值的传递。及时更新
-                 */
-                if (position != 0) {
-                    bannerVpHelper.changeCurrentPage(position)
-                }
-            }
-        })
-    }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         when (holder) {

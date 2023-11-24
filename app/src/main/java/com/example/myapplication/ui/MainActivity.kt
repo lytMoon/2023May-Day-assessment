@@ -5,14 +5,18 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.myapplication.adapter.BannerAdapter
 import com.example.myapplication.adapter.NewsAdapter
 import com.example.myapplication.databinding.ActivityMainBinding
+import com.example.myapplication.helper.BannerVpHelper
 import com.example.myapplication.myData.Story
 import com.example.myapplication.util.DateUtil
 import com.example.myapplication.viewmodel.MyViewModel
@@ -32,8 +36,25 @@ class MainActivity : AppCompatActivity() {
         ViewModelProvider(this)[MyViewModel::class.java]
     }
 
-
+    private val bannerVpHelper = BannerVpHelper()
     private val mBinding: ActivityMainBinding by lazy { ActivityMainBinding.inflate(layoutInflater) }
+    private lateinit var handler: Handler
+
+    private val runnable = object : Runnable {
+
+        override fun run() {
+            //定时任务
+            bannerVpHelper.initBanner(rvAdapter)
+
+//            handler.postDelayed(this, REFRESH_TIME)
+        }
+
+    }
+
+    companion object {
+        private const val REFRESH_TIME = 5000L
+        private const val DELAY_TIME = 5000L
+    }
 
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -44,6 +65,13 @@ class MainActivity : AppCompatActivity() {
         iniView()
         iniTrans()
         iniRefresh()
+        iniHandler()
+
+    }
+
+    private fun iniHandler() {
+        handler = Handler(Looper.getMainLooper())
+        handler.postDelayed(runnable, DELAY_TIME)
 
     }
 
@@ -62,9 +90,10 @@ class MainActivity : AppCompatActivity() {
         myViewModel.newsTopData.observe(this) {
             mTopNewsList = it as MutableList<Story>
             rvAdapter.submitBannerList(mTopNewsList)
+
         }
 
-        rvAdapter.viewPager2Adapter.setOnItemClick {
+        bannerVpHelper.viewPager2Adapter.setOnItemClick {
             val intent = Intent(this, DetailActivity::class.java)
             intent.putExtra("newsId", mTopNewsList[it].id)
             intent.putExtra("topNewsUrl", mTopNewsList[it].url)
@@ -77,7 +106,6 @@ class MainActivity : AppCompatActivity() {
             mAllList = (mTopNewsList + it).toMutableList()
             editor.putString("all_list_key", gson.toJson(mAllList))
             editor.apply()
-
 
             mBinding.toolBarTime.text = DateUtil.getDateTitle()
         }
@@ -141,7 +169,8 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         //销毁handler
-        rvAdapter.bannerVpHelper.destroyRun()
+        bannerVpHelper.destroyRun()
+        handler.removeCallbacks(runnable)
     }
 }
 
