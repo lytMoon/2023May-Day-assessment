@@ -1,6 +1,5 @@
 package com.example.myapplication.adapter
 
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,9 +9,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.myapplication.ui.DetailActivity
 import com.example.myapplication.R
-import com.example.myapplication.myData.TopStory
+import com.example.myapplication.myData.Story
 
 /**
  * description ：
@@ -21,19 +19,38 @@ import com.example.myapplication.myData.TopStory
  * date : 2023/4/30 08:49
  * version: 1.0
  */
-class TopNewsAdapter :
-    ListAdapter<TopStory, TopNewsAdapter.NewsViewHolder>(object :
-        DiffUtil.ItemCallback<TopStory>() {
-        override fun areItemsTheSame(oldItem: TopStory, newItem: TopStory): Boolean {
+class BannerAdapter :
+    ListAdapter<Story, BannerAdapter.NewsViewHolder>(object :
+        DiffUtil.ItemCallback<Story>() {
+        override fun areItemsTheSame(oldItem: Story, newItem: Story): Boolean {
             return oldItem == newItem
         }
 
-        override fun areContentsTheSame(oldItem: TopStory, newItem: TopStory): Boolean {
+        override fun areContentsTheSame(oldItem: Story, newItem: Story): Boolean {
             return oldItem.title == newItem.title
         }
     }) {
 
 
+    //默认是没有滑动
+    private var isScrolling = false
+
+
+    /**
+     * 点击按钮的回调
+     */
+
+    private var mClick: ((Int) -> Unit)? = null
+
+
+    fun setOnItemClick(listener: (Int) -> Unit) {
+        mClick = listener
+    }
+
+
+    fun addPageChange(isl: Boolean) {
+        isScrolling = isl
+    }
 
     override fun getItemCount(): Int {
         return Int.MAX_VALUE // 返回一个很大的值，使得用户无法滑动到边界
@@ -55,20 +72,18 @@ class TopNewsAdapter :
         private val tvName: TextView = itemView.findViewById(R.id.tv_name)
         private val imageView: ImageView = itemView.findViewById(R.id.imageView)
 
-        fun bind(news: TopStory) {
+        init {
+            itemView.setOnClickListener {
+                if (!isScrolling) {
+                    mClick?.invoke(absoluteAdapterPosition)
+                }
+            }
+        }
+
+        fun bind(news: Story) {
             tvName.text = news.hint
             titleView.text = news.title
             Glide.with(itemView.context).load(news.image).into(imageView)
-
-
-            itemView.setOnClickListener {
-                val intent = Intent(itemView.context, DetailActivity::class.java)
-                //设置标志符
-                intent.putExtra("newsId", news.id)
-                intent.putExtra("topNewsUrl", news.url)
-                itemView.context.startActivity(intent)
-            }
         }
     }
-
 }

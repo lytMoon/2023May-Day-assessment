@@ -1,75 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
 
-
-    <LinearLayout
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/news_title"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_marginStart="14dp"
+        android:layout_marginTop="15dp"
+        android:maxWidth="250dp"
+        android:maxHeight="50dp"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:maxLines="2"
+        android:ellipsize="end"
+        android:textStyle="bold" />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="90dp"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/news_title"
-                android:layout_width="280dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="14dp"
-                android:layout_marginTop="15dp"
-                android:textColor="@color/black"
-                android:textSize="17sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="300dp"
-                android:layout_height="5sp"
-                tools:ignore="SmallSp" />
-
-            <TextView
-                android:id="@+id/news_hint"
-                android:layout_width="300dp"
-                android:layout_height="30sp"
-                android:layout_marginLeft="14dp"
-                android:textSize="15sp" />
-        </LinearLayout>
-
-        <ImageView
-            android:id="@+id/news_imageView"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:layout_marginTop="13dp"
-            android:layout_marginRight="30dp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="10dp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="10dp"
-            android:text="---------------------------------------------------------------------------"
-            android:textColor="@color/white"
-            android:textSize="10sp"
-            tools:ignore="SmallSp" />
-
-        <TextView
-            android:id="@+id/news_time"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/teal_200"
-            android:textSize="10sp"
-            tools:ignore="SmallSp" />
-
-    </LinearLayout>
+    <TextView
+        android:id="@+id/news_hint"
+        android:layout_width="280dp"
+        android:layout_height="30sp"
+        android:layout_marginStart="14dp"
+        android:layout_marginTop="70dp"
+        android:textSize="15sp" />
 
 
-</LinearLayout>
+    <ImageView
+        android:id="@+id/news_imageView"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_gravity="end"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="14dp" />
+
+<!--    <View-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="10dp"-->
+<!--        android:layout_marginTop="100dp"-->
+<!--        android:textColor="@color/white"-->
+<!--        android:textSize="10sp"-->
+<!--        tools:ignore="SmallSp" />-->
+
+<!--    <TextView-->
+<!--        android:id="@+id/news_time"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:textColor="@color/teal_200"-->
+<!--        android:textSize="10sp"-->
+<!--        tools:ignore="SmallSp" />-->
+
+
+</FrameLayout>
