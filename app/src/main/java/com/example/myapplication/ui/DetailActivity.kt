@@ -21,11 +21,13 @@ import com.google.gson.reflect.TypeToken
  */
 class DetailActivity : AppCompatActivity() {
     private val myViewModel by lazy {
-        ViewModelProvider(this)[MyViewModel::class.java]
+        ViewModelProvider(MainActivity())[MyViewModel::class.java]
     }
     private val mBinding: ActivityNewsReadingBinding by lazy {
         ActivityNewsReadingBinding.inflate(layoutInflater)
     }
+    private val adapter = DetailNewsAdapter()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,38 +37,26 @@ class DetailActivity : AppCompatActivity() {
          * 获得livedData
          */
         // 获取 SharedPreferences 对象
-        val sharedPreferences = getSharedPreferences("MY_SHARED_PREFERENCES", Context.MODE_PRIVATE)
+        val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
         // 从 SharedPreferences 中读取 LiveData 对象的值，并将其转换为 List<Story> 类型
-        val liveDataValue = sharedPreferences.getString("LIVE_DATA_KEY", null)
+        val listAsString = sharedPreferences.getString("all_list_key", null)
         val listType = object : TypeToken<List<Story>>() {}.type
-        val liveData = MutableLiveData<List<Story>>(Gson().fromJson(liveDataValue, listType))
-        val vp2: ViewPager2 = mBinding.detailViewpager2
-        val adapter = DetailNewsAdapter()
 
-        liveData.observe(this) { list ->
-            adapter.submitList(list)
-        }
-        vp2.adapter = adapter
-        //webView = mBinding.myWebView
+        val allList: MutableList<Story> =
+            Gson().fromJson(listAsString, object : TypeToken<MutableList<Story>>() {}.type)
+        adapter.submitList(allList)
+        mBinding.detailViewpager2.adapter = adapter
         val topNewsUrl = intent.getStringExtra("topNewsUrl")
-        val cmId = intent.getIntExtra("newsId", 0)//找不到的话那就设置为默认值0
-
-        Log.d("cmId", "(newsReadingActivity.kt:25)-->> $cmId")
-        Log.d("topNewsUrl", "(newsReadingActivity.kt:17)-->> $topNewsUrl")
-        liveData.observe(this) { list ->
-            val currentList = ArrayList<String>()
-            for (it in list) {
-                currentList.add(it.url)
-            }
-            //获得item对应的东西
-
-            val position = currentList.indexOf(topNewsUrl)
-            Log.d("myposi", "(newsReadingActivity.kt:25)-->> ${position}")
-            mBinding.detailViewpager2.setCurrentItem(position)
+        val cmId = intent.getIntExtra("newsId", 0)
+        Log.d("cm1222", "(newsReadingActivity.kt:25)-->> $cmId")
+        Log.d("cm1222", "(newsReadingActivity.kt:17)-->> $topNewsUrl")
+        val currentList = ArrayList<Int>()
+        for (it in allList) {
+            currentList.add(it.id)
+            Log.d("585858589", "DetailActivity.kt:------>${allList}")
         }
-//        if (!topNewsUrl.isNullOrEmpty()) {
-//            webView.loadUrl(topNewsUrl)
-//        }
+        val position = currentList.indexOf(cmId)
+        mBinding.detailViewpager2.currentItem = position
         mBinding.btnReturn.setOnClickListener {
             Toast.makeText(this, "返回", Toast.LENGTH_SHORT).show()
             finish()//结束当前的activity
@@ -121,6 +111,10 @@ class DetailActivity : AppCompatActivity() {
 //    }
     }
 
+
+}
+
+private fun <E> MutableList<E>.add(element: Int) {
 
 }
 

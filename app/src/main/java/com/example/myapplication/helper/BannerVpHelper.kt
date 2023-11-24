@@ -2,16 +2,15 @@ package com.example.myapplication.helper
 
 import android.os.Handler
 import android.os.Looper
-import androidx.core.os.postDelayed
 import androidx.viewpager2.widget.ViewPager2
 import com.example.myapplication.api.BannerHelper
-import com.example.myapplication.myData.TopStory
+import com.example.myapplication.myData.Story
 
 /**
  * 辅助顶部无限轮播图
  * 封装了一个handler
  */
-class BannerVpHelper(val mViewPager: ViewPager2, val mData: List<TopStory>) : BannerHelper {
+class BannerVpHelper(val mViewPager: ViewPager2, val mData: List<Story>) : BannerHelper {
 
 
     companion object {

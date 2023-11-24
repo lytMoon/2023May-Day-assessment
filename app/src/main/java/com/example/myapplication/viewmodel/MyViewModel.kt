@@ -8,7 +8,6 @@ import androidx.lifecycle.ViewModel
 import com.example.myapplication.myData.Comment
 import com.example.myapplication.myData.RecentNewsData
 import com.example.myapplication.myData.Story
-import com.example.myapplication.myData.TopStory
 import com.example.myapplication.util.NetObj
 import io.reactivex.rxjava3.core.Observer
 import io.reactivex.rxjava3.disposables.Disposable
@@ -23,7 +22,7 @@ import io.reactivex.rxjava3.disposables.Disposable
 class MyViewModel : ViewModel() {
 
 
-    private val _newsTopData: MutableLiveData<List<TopStory>> = MutableLiveData()
+    private val _newsTopData: MutableLiveData<List<Story>> = MutableLiveData()
     private val _commentData: MutableLiveData<List<Comment>> = MutableLiveData()
     private val _newsRecentData: MutableLiveData<List<Story>> = MutableLiveData()
 
@@ -32,7 +31,7 @@ class MyViewModel : ViewModel() {
         receiveNewsData()
     }
 
-    val newsTopData: LiveData<List<TopStory>>
+    val newsTopData: LiveData<List<Story>>
         get() = _newsTopData//
     val newsRecentData: LiveData<List<Story>>
         get() = _newsRecentData
@@ -45,7 +44,7 @@ class MyViewModel : ViewModel() {
      fun receiveTopNews() {
 
         NetObj.getTopNews()
-            .subscribe(object : Observer<RecentNewsData<TopStory>> {
+            .subscribe(object : Observer<RecentNewsData<Story>> {
                 override fun onSubscribe(d: Disposable) {
                 }
 
@@ -56,7 +55,7 @@ class MyViewModel : ViewModel() {
                 override fun onComplete() {
                 }
 
-                override fun onNext(t: RecentNewsData<TopStory>) {
+                override fun onNext(t: RecentNewsData<Story>) {
                     _newsTopData.postValue(t.top_stories)
                 }
 

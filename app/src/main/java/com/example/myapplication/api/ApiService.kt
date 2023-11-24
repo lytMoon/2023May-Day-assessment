@@ -4,7 +4,6 @@ import com.example.myapplication.myData.Comment
 import com.example.myapplication.myData.CommentData
 import com.example.myapplication.myData.RecentNewsData
 import com.example.myapplication.myData.Story
-import com.example.myapplication.myData.TopStory
 import io.reactivex.rxjava3.core.Observable
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -22,7 +21,7 @@ interface ApiService {
     下面是最新的新闻消息，用于我们的轮播图
      */
     @GET("api/4/news/latest")
-    fun getTopNews(): Observable<RecentNewsData<TopStory>>
+    fun getTopNews(): Observable<RecentNewsData<Story>>
 
     /**
     下面是进行最新消息的请求

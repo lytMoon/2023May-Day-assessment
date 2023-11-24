@@ -17,17 +17,23 @@ import com.example.myapplication.myData.Story
  * date : 2023/5/3
  * version: 1.0
  */
-class DetailNewsAdapter :
-    ListAdapter<Story, DetailNewsAdapter.DetailNewsViewHolder>(object :
-        DiffUtil.ItemCallback<Story>() {
-        override fun areItemsTheSame(oldItem: Story, newItem: Story): Boolean {
-            return oldItem == newItem
-        }
+class DetailNewsAdapter : ListAdapter<Story, DetailNewsAdapter.DetailNewsViewHolder>(object :
+    DiffUtil.ItemCallback<Story>() {
+    override fun areItemsTheSame(oldItem: Story, newItem: Story): Boolean {
+        return oldItem == newItem
+    }
 
-        override fun areContentsTheSame(oldItem: Story, newItem: Story): Boolean {
-            return oldItem.title == newItem.title
-        }
-    }) {
+    override fun areContentsTheSame(oldItem: Story, newItem: Story): Boolean {
+        return oldItem.title == newItem.title && oldItem.id == newItem.id
+    }
+}) {
+
+
+    private var mClick: ((Int) -> Unit?)? = null
+
+    fun setOnItemClick(m: ((Int) -> Unit?)) {
+        mClick = m
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DetailNewsViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_webview, parent, false)
@@ -45,6 +51,4 @@ class DetailNewsAdapter :
             detailWebView.loadUrl(news.url)
         }
     }
-
-
 }
