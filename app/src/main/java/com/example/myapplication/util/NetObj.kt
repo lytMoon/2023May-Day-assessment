@@ -40,8 +40,9 @@ object NetObj {
         return apiService.getNews()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .delay(900, TimeUnit.MILLISECONDS)
+//            .delay(900, TimeUnit.MILLISECONDS)
     }
+
 
     fun getBeforeNews(time: String): Observable<RecentNewsData<Story>> {
         return apiService.getBeforeNews(time)

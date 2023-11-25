@@ -40,14 +40,25 @@ class NewsAdapter() : ListAdapter<Story, ViewHolder>(object : DiffUtil.ItemCallb
 
 
     //默认是没有滑动
-    private var isScrolling = false
-     lateinit var bannerNewsList: List<Story>
+
+    var isScrolling = false
+    lateinit var bannerNewsList: List<Story>
     lateinit var mViewPager: ViewPager2
+
+
+    /**
+     * 初始化vp的回调
+     */
+    private var mInitBanner: ((NewsAdapter) -> Unit)? = null
+
+
+    fun onInitBanner(ir: (NewsAdapter) -> Unit) {
+        mInitBanner = ir
+    }
 
     /**
      * 点击按钮的回调
      */
-
     private var mClick: ((Int) -> Unit)? = null
 
 
@@ -76,6 +87,7 @@ class NewsAdapter() : ListAdapter<Story, ViewHolder>(object : DiffUtil.ItemCallb
                 val view =
                     LayoutInflater.from(parent.context).inflate(R.layout.item_top_rv, parent, false)
                 mViewPager = view.findViewById(R.id.banner_view_pager)
+                mInitBanner?.invoke(this)
                 return RvNewsTopViewHolder(view)
             }
 

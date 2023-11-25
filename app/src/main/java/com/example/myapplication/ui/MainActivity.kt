@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myapplication.adapter.BannerAdapter
 import com.example.myapplication.adapter.NewsAdapter
+import com.example.myapplication.api.BannerHelper
 import com.example.myapplication.databinding.ActivityMainBinding
 import com.example.myapplication.helper.BannerVpHelper
 import com.example.myapplication.myData.Story
@@ -36,26 +37,19 @@ class MainActivity : AppCompatActivity() {
         ViewModelProvider(this)[MyViewModel::class.java]
     }
 
-    private val bannerVpHelper = BannerVpHelper()
+    private val bannerVpHelper by lazy { BannerVpHelper() }
     private val mBinding: ActivityMainBinding by lazy { ActivityMainBinding.inflate(layoutInflater) }
     private lateinit var handler: Handler
-
     private val runnable = object : Runnable {
 
         override fun run() {
-            //定时任务
-            bannerVpHelper.initBanner(rvAdapter)
-
-//            handler.postDelayed(this, REFRESH_TIME)
+            handler.postDelayed(this, REFRESH_TIME)
         }
-
     }
 
     companion object {
         private const val REFRESH_TIME = 5000L
-        private const val DELAY_TIME = 5000L
     }
-
 
     @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("ResourceAsColor", "NotifyDataSetChanged")
@@ -65,14 +59,13 @@ class MainActivity : AppCompatActivity() {
         iniView()
         iniTrans()
         iniRefresh()
-        iniHandler()
+//        iniHandler()
 
     }
 
     private fun iniHandler() {
         handler = Handler(Looper.getMainLooper())
-        handler.postDelayed(runnable, DELAY_TIME)
-
+        handler.postDelayed(runnable, REFRESH_TIME)
     }
 
 
@@ -86,18 +79,14 @@ class MainActivity : AppCompatActivity() {
         val editor = sharedPrefs.edit()
         val gson = Gson()
         mBinding.recyclerView.layoutManager = LinearLayoutManager(this)
+
         //因为设置了网络请求的限制，所以第二个观察一点晚于第一个
-        myViewModel.newsTopData.observe(this) {
-            mTopNewsList = it as MutableList<Story>
-            rvAdapter.submitBannerList(mTopNewsList)
-
-        }
-
-        bannerVpHelper.viewPager2Adapter.setOnItemClick {
-            val intent = Intent(this, DetailActivity::class.java)
-            intent.putExtra("newsId", mTopNewsList[it].id)
-            intent.putExtra("topNewsUrl", mTopNewsList[it].url)
-            startActivity(intent)
+        myViewModel.newsTopData.observe(this) { storyList ->
+            mTopNewsList = storyList as MutableList<Story>
+            rvAdapter.onInitBanner {
+                it.submitBannerList(mTopNewsList)
+                bannerVpHelper.initBanner(it)
+            }
         }
         myViewModel.newsRecentData.observe(this) {
             mNewsList = (it as MutableList<Story>).toMutableList()
@@ -109,6 +98,13 @@ class MainActivity : AppCompatActivity() {
 
             mBinding.toolBarTime.text = DateUtil.getDateTitle()
         }
+
+        bannerVpHelper.viewPager2Adapter.setOnItemClick {
+            val intent = Intent(this, DetailActivity::class.java)
+            intent.putExtra("newsId", mTopNewsList[it].id)
+            intent.putExtra("topNewsUrl", mTopNewsList[it].url)
+            startActivity(intent)
+        }
         mBinding.recyclerView.adapter = rvAdapter.apply {
             setOnItemClick {
                 val intent = Intent(this@MainActivity, DetailActivity::class.java)
@@ -119,7 +115,6 @@ class MainActivity : AppCompatActivity() {
 
             }
         }
-
     }
 
     //处理刷新和加载
@@ -131,7 +126,6 @@ class MainActivity : AppCompatActivity() {
             setOnRefreshListener {
                 myViewModel.apply {
                     receiveTopNews()
-                    receiveNewsData()
                 }
                 finishRefresh(500)
             }
@@ -144,33 +138,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
-    /**
-     * TODO:这里有一点没弄明白
-     *
-     *      rvAdapter.submitList(it)
-     *             Log.d("999999", "MainActivity.kt:------>${it.size}")
-     *             mNewsList = it as MutableList<Story?>
-     *             mNewsList.add(0, null)
-     *             Log.d("111111", "MainActivity.kt:------>${it.size}")
-     *             这种写法两个it是不一样的值，
-     *             但是observe函数就调用了一次
-     *
-     *             按道理来说adapter获取的应该是size为5的（第一个元素不是空），但是实际是获取的是第二个size为6的集合，这是为什么？
-     *
-     *             但是把第一种写法换成
-     *             mNewsList = (it as MutableList<Story>).toMutableList()
-     *             就一样了，这时为什么？
-     *             初步怀疑    mNewsList = it as MutableList<Story?>这种写法的强制类型转换 没有执行as后面的，把it地址给了mNewsList，由于it变化了
-     *             经过了一些手段，重新或者说 rvAdapter.submitList(it)传入的it为最新的6 而不是5，而不是observe无限循环（可以理解最后执行的它）
-     *
-     */
-
     override fun onDestroy() {
         super.onDestroy()
         //销毁handler
         bannerVpHelper.destroyRun()
-        handler.removeCallbacks(runnable)
+//        handler.removeCallbacks(runnable)
     }
 }
 

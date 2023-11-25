@@ -27,8 +27,9 @@ class MyViewModel : ViewModel() {
     private val _newsRecentData: MutableLiveData<List<Story>> = MutableLiveData()
 
     init {
+        //初始的时候会进行顶部的网络请求，这时候在请求成功后会receiveNewsData(),解决异步的时候数据没有初始化的问题
+        //所以刷新的时候只需要执行receiveTopNews()即可
         receiveTopNews()
-        receiveNewsData()
     }
 
     val newsTopData: LiveData<List<Story>>
@@ -41,31 +42,31 @@ class MyViewModel : ViewModel() {
     /**
      * 获取轮播图数据
      */
-     fun receiveTopNews() {
+    fun receiveTopNews() {
 
-        NetObj.getTopNews()
-            .subscribe(object : Observer<RecentNewsData<Story>> {
-                override fun onSubscribe(d: Disposable) {
-                }
+        NetObj.getTopNews().subscribe(object : Observer<RecentNewsData<Story>> {
+            override fun onSubscribe(d: Disposable) {
+            }
 
-                override fun onError(e: Throwable) {
-                    Log.d("testLog", "MyViewModel.kt:------>${e}")
-                }
+            override fun onError(e: Throwable) {
+                Log.d("testLog", "MyViewModel.kt:------>${e}")
+            }
 
-                override fun onComplete() {
-                }
+            override fun onComplete() {
+            }
 
-                override fun onNext(t: RecentNewsData<Story>) {
-                    _newsTopData.postValue(t.top_stories)
-                }
+            override fun onNext(t: RecentNewsData<Story>) {
+                _newsTopData.postValue(t.top_stories)
+                receiveNewsData()
+            }
 
-            })
+        })
     }
 
     /**
      * 获取初始显示的新闻数据
      */
-     fun receiveNewsData() {
+    private fun receiveNewsData() {
         NetObj.getNews().subscribe(object : Observer<RecentNewsData<Story>> {
             override fun onSubscribe(d: Disposable) {
             }
@@ -89,38 +90,32 @@ class MyViewModel : ViewModel() {
      */
     @SuppressLint("CheckResult")
     fun rvBeforeStoryQuest(time: String) {
-        NetObj.getBeforeNews(time)
-            .subscribe(object : Observer<RecentNewsData<Story>> {
-                override fun onSubscribe(d: Disposable) {
+        NetObj.getBeforeNews(time).subscribe(object : Observer<RecentNewsData<Story>> {
+            override fun onSubscribe(d: Disposable) {
 
-                }
+            }
 
-                override fun onError(e: Throwable) {
-                    Log.d("testLog", "MyViewModel.kt:------>${e}")
-                }
+            override fun onError(e: Throwable) {
+                Log.d("testLog", "MyViewModel.kt:------>${e}")
+            }
 
-                override fun onComplete() {
-                }
+            override fun onComplete() {
+            }
 
-                override fun onNext(t: RecentNewsData<Story>) {
-                    _newsRecentData.value = _newsRecentData.value?.plus(t.stories)
-                    Log.d("48484884","MyViewModel.kt:------>${t.stories}")
-                    //等价于下面
-//                    val newData = t.stories
-//                    val oldData = _newsRecentData.value ?: emptyList()//为空的时候返回emptyList
-//                    _newsRecentData.value = oldData + newData// 将新数据添加到旧数据列表中，然后设置为 LiveData 的值
-                }
+            override fun onNext(t: RecentNewsData<Story>) {
+                _newsRecentData.value = _newsRecentData.value?.plus(t.stories)
+                Log.d("48484884", "MyViewModel.kt:------>${t.stories}")
 
-            })
+            }
+        })
     }
 
 
     @SuppressLint("CheckResult")
     fun rvCommentQuest(id: Int) {
-        NetObj.getComments(id)
-            .subscribe {
-                _commentData.postValue(it.comments)
-            }
+        NetObj.getComments(id).subscribe {
+            _commentData.postValue(it.comments)
+        }
     }
 }
 
